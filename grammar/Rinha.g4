@@ -1,4 +1,4 @@
-grammar RINHA;
+grammar Rinha;
 
 compilationUnit: statement* ;
 

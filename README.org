@@ -1,0 +1,16 @@
+
+* Building and Running
+
+#+begin_src shell
+
+  # create a build directory to keep the main one clea
+  mkdir build
+  cd build
+  # to run CMake
+  cmake ../
+  # to build
+  make
+  # run the executable
+  ./rinha
+ 
+#+end_src
