@@ -3,6 +3,10 @@
 using namespace std;
 
 std::any RinhaToCppVisitor::visitCompilationUnit(RinhaParser::CompilationUnitContext *ctx) {
-  cout << "Hello, World!\n";
+  return visitChildren(ctx);
+}
+
+std::any RinhaToCppVisitor::visitPrint(RinhaParser::PrintContext *ctx) {
+  cout << ctx->term()->STRING()->getText();
   return visitChildren(ctx);
 }
