@@ -1,12 +1,48 @@
 grammar Rinha;
 
+@header {
+  package antlr;
+}
+
 compilationUnit: statement* ;
 
-statement: print ;
+variableDeclaration
+    : 'let' assignable '=' singleExpression
+    ;
 
-print: 'print' '(' term ')';
+singleExpression
+    : literal
+    | ID
+    | STRING
+    ;
 
-term: STRING;
+literal
+    : numericLiteral
+    ;
+
+numericLiteral
+    : INT
+    ;
+
+assignable
+    : ID
+    ;
+
+statement
+    : variableDeclaration
+    | print
+    ;
+
+print: 'print' '(' singleExpression ')' ;
+
+ID: LETTER (LETTER|DIGIT)* ;
+
+INT: DIGIT+ ;
+
+fragment
+    LETTER: 'a'..'z' | 'A'..'Z' | '_' ;
+fragment
+    DIGIT: '0'..'9' ;
 
 STRING : '"' .*? '"' ;
-WS : [ \t\n\r]+ -> skip;
+WS : [ \t\n\r]+ -> skip ;
