@@ -70,12 +70,18 @@ public class RinhaToJava extends RinhaBaseListener {
         return null;
     }
 
+    // TODO - else if can exists?
     private Value evaluateIfStatement(RinhaParser.IfStatementContext ctx) {
-        var statements = ctx.statement();
         boolean ifClause = evaluateBooleanExpression(ctx.singleExpression());
 
-        // TODO - label statements
-        return evaluateStatement(statements.get(statements.size() - 1));
+        // TODO - will break with multiple expressions
+        int blockStatementsIndex = ifClause ? 0 : ctx.ELSE() != null ? 1 : -1;
+        if (blockStatementsIndex == -1) {
+            throw new RuntimeException("if statement malformed '" + ctx.getText() + "'.");
+        }
+
+        var ifBlockStatements = ctx.block(blockStatementsIndex).statement();
+        return evaluateStatement(ifBlockStatements.get(ifBlockStatements.size() - 1));
     }
 
     private boolean evaluateBooleanExpression(RinhaParser.SingleExpressionContext ctx) {

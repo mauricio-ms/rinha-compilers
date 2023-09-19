@@ -1,8 +1,8 @@
 let sum = fn (n) => {
-  if (true) {
-    n
+  if (false) {
+    1
   } else {
-    n
+    2
   }
 };
 

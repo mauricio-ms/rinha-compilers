@@ -7,11 +7,14 @@ grammar Rinha;
 compilationUnit: statement* ;
 
 statement
-    : variableDeclaration
+    : block
+    | variableDeclaration
     | functionDeclaration
     | print
     | singleExpression
     ;
+
+block : '{' statement* '}' ;
 
 variableDeclaration
     : 'let' assignable '=' singleExpression
@@ -50,8 +53,10 @@ literal
     ;
 
 ifStatement
-    : 'if' '(' singleExpression ')' '{' statement* '}' ('else' '{' statement* '}')?
+    : 'if' '(' singleExpression ')' block (ELSE block)?
     ;
+
+ELSE: 'else' ;
 
 print: 'print' '(' singleExpression ')' ;
 
