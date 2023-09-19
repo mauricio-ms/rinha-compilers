@@ -6,14 +6,29 @@ grammar Rinha;
 
 compilationUnit: statement* ;
 
+statement
+    : variableDeclaration
+    | functionDeclaration
+    | print
+    | singleExpression
+    ;
+
 variableDeclaration
     : 'let' assignable '=' singleExpression
     ;
 
+functionDeclaration
+    : 'let' ID '=' 'fn' '(' ')' '=' '>' '{' statement* '}' ';'? ;
+
 singleExpression
-    : literal
+    : functionCall
+    | literal
     | ID
     | STRING
+    ;
+
+functionCall
+    : ID '(' ')'
     ;
 
 literal
@@ -26,11 +41,6 @@ numericLiteral
 
 assignable
     : ID
-    ;
-
-statement
-    : variableDeclaration
-    | print
     ;
 
 print: 'print' '(' singleExpression ')' ;
