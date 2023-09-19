@@ -18,7 +18,11 @@ variableDeclaration
     ;
 
 functionDeclaration
-    : 'let' ID '=' 'fn' '(' ')' '=' '>' '{' statement* '}' ';'? ;
+    : 'let' ID '=' 'fn' '(' formalParameterList? ')' '=' '>' '{' statement* '}' ';'? ;
+
+formalParameterList
+    : ID (',' ID)*
+    ;
 
 singleExpression
     : functionCall
@@ -28,7 +32,11 @@ singleExpression
     ;
 
 functionCall
-    : ID '(' ')'
+    : ID '(' singleExpressionList? ')'
+    ;
+
+singleExpressionList
+    : singleExpression (',' singleExpression)*
     ;
 
 literal

@@ -1,5 +1,5 @@
-let sum = fn () => {
-    23
+let sum = fn (n) => {
+    n
 };
 
-print (sum());
+print (sum(29));

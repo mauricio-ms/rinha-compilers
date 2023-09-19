@@ -2,15 +2,12 @@ import antlr.RinhaBaseListener;
 import antlr.RinhaParser;
 import org.antlr.v4.runtime.tree.ParseTree;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 public class RinhaToJava extends RinhaBaseListener {
 
     private final Map<String, String> variables = new HashMap<>();
-    private final Map<String, List<RinhaParser.StatementContext>> functions = new HashMap<>();
+    private final Map<String, Function> functions = new HashMap<>();
 
     @Override
     public void enterVariableDeclaration(RinhaParser.VariableDeclarationContext ctx) {
@@ -21,7 +18,7 @@ public class RinhaToJava extends RinhaBaseListener {
     public void enterFunctionDeclaration(RinhaParser.FunctionDeclarationContext ctx) {
         functions.put(
                 ctx.ID().getText(),
-                ctx.statement()
+                new Function(ctx.formalParameterList().ID().stream().map(ParseTree::getText).toList(), ctx.statement())
         );
     }
 
@@ -37,25 +34,39 @@ public class RinhaToJava extends RinhaBaseListener {
                         .map(ParseTree::getText))
                 .or(() -> Optional.ofNullable(ctx.ID())
                         .map(ParseTree::getText)
-                        .map(variables::get) // TODO - Throws exception if var doesn't exist
+                        .map(this::readVariable)
                         .or(() -> Optional.ofNullable(ctx.STRING())
                                 .map(ParseTree::getText)))
                 .orElseThrow(() -> new RuntimeException("Expression " + ctx.getText() + " cannot be evaluated."));
     }
 
+    private String readVariable(String name) {
+        return Optional.ofNullable(variables.get(name))
+                .orElseThrow(() -> new RuntimeException("Variable '" + name + "' not declared."));
+    }
+
     private String evaluateFunction(RinhaParser.FunctionCallContext ctx) {
         // TODO - Throws exception if function doesn't exists
-        List<RinhaParser.StatementContext> statementContexts = functions.get(ctx.ID().getText());
-        if (statementContexts.isEmpty()) {
+        Function function = functions.get(ctx.ID().getText());
+        var statements = function.statements();
+        if (statements.isEmpty()) {
             return null;
         }
-        return evaluateStatement(statementContexts.get(statementContexts.size() - 1));
+
+        List<String> parameters = function.parameters();
+        var expressions = ctx.singleExpressionList().singleExpression();
+        for (int i = 0; i < parameters.size(); i++) {
+            // TODO - Implement shadowing
+            variables.put(parameters.get(i), evaluateSingleExpression(expressions.get(i)));
+        }
+
+        return evaluateStatement(statements.get(statements.size() - 1));
     }
 
     private String evaluateStatement(RinhaParser.StatementContext ctx) {
         var singleExpression = ctx.singleExpression();
         if (singleExpression != null) {
-            return singleExpression.getText();
+            return evaluateSingleExpression(singleExpression);
         }
         return null;
     }
