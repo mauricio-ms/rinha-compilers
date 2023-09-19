@@ -1,5 +1,9 @@
 let sum = fn (n) => {
+  if (true) {
     n
+  } else {
+    n
+  }
 };
 
 print (sum(29));

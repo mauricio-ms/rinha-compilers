@@ -17,6 +17,10 @@ variableDeclaration
     : 'let' assignable '=' singleExpression
     ;
 
+assignable
+    : ID
+    ;
+
 functionDeclaration
     : 'let' ID '=' 'fn' '(' formalParameterList? ')' '=' '>' '{' statement* '}' ';'? ;
 
@@ -26,9 +30,9 @@ formalParameterList
 
 singleExpression
     : functionCall
+    | ifStatement
     | literal
     | ID
-    | STRING
     ;
 
 functionCall
@@ -40,22 +44,21 @@ singleExpressionList
     ;
 
 literal
-    : numericLiteral
-    ;
-
-numericLiteral
     : INT
+    | BOOL
+    | STRING
     ;
 
-assignable
-    : ID
+ifStatement
+    : 'if' '(' singleExpression ')' '{' statement* '}' ('else' '{' statement* '}')?
     ;
 
 print: 'print' '(' singleExpression ')' ;
 
-ID: LETTER (LETTER|DIGIT)* ;
-
 INT: DIGIT+ ;
+BOOL: 'true' | 'false' ;
+
+ID: LETTER (LETTER|DIGIT)* ;
 
 fragment
     LETTER: 'a'..'z' | 'A'..'Z' | '_' ;
