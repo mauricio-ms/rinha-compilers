@@ -41,6 +41,26 @@ class Int extends Value {
     }
 
     @Override
+    Value lt(Int other) {
+        return new Bool(v < other.v());
+    }
+
+    @Override
+    Value lte(Int other) {
+        return new Bool(v <= other.v());
+    }
+
+    @Override
+    Value gt(Int other) {
+        return new Bool(v > other.v());
+    }
+
+    @Override
+    Value gte(Int other) {
+        return new Bool(v >= other.v());
+    }
+
+    @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;

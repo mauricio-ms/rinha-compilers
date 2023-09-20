@@ -157,4 +157,112 @@ public abstract class Value {
     public final Value neq(Value other) {
         return new Bool(!this.equals(other));
     }
+
+    public final Value lt(Value other) {
+        if (other instanceof Int i) {
+            return lt(i);
+        } else if (other instanceof Bool b) {
+            return lt(b);
+        } else if (other instanceof Str s) {
+            return lt(s);
+        } else {
+            throw new RuntimeException("Undefined handling of operation '<' for type '" + other.getClass().getSimpleName() + "', update this code.");
+        }
+    }
+
+    Value lt(Int other) {
+        throw new RuntimeException("Operator '<' cannot be applied to '%s', 'Int'."
+                .formatted(getClass().getSimpleName()));
+    }
+
+    Value lt(Bool other) {
+        throw new RuntimeException("Operator '<' cannot be applied to '%s', 'Bool'."
+                .formatted(getClass().getSimpleName()));
+    }
+
+    Value lt(Str other) {
+        throw new RuntimeException("Operator '<' cannot be applied to '%s', 'Str'."
+                .formatted(getClass().getSimpleName()));
+    }
+
+    public final Value lte(Value other) {
+        if (other instanceof Int i) {
+            return lte(i);
+        } else if (other instanceof Bool b) {
+            return lte(b);
+        } else if (other instanceof Str s) {
+            return lte(s);
+        } else {
+            throw new RuntimeException("Undefined handling of operation '<=' for type '" + other.getClass().getSimpleName() + "', update this code.");
+        }
+    }
+
+    Value lte(Int other) {
+        throw new RuntimeException("Operator '<=' cannot be applied to '%s', 'Int'."
+                .formatted(getClass().getSimpleName()));
+    }
+
+    Value lte(Bool other) {
+        throw new RuntimeException("Operator '<=' cannot be applied to '%s', 'Bool'."
+                .formatted(getClass().getSimpleName()));
+    }
+
+    Value lte(Str other) {
+        throw new RuntimeException("Operator '<=' cannot be applied to '%s', 'Str'."
+                .formatted(getClass().getSimpleName()));
+    }
+
+    public final Value gt(Value other) {
+        if (other instanceof Int i) {
+            return gt(i);
+        } else if (other instanceof Bool b) {
+            return gt(b);
+        } else if (other instanceof Str s) {
+            return gt(s);
+        } else {
+            throw new RuntimeException("Undefined handling of operation '>' for type '" + other.getClass().getSimpleName() + "', update this code.");
+        }
+    }
+
+    Value gt(Int other) {
+        throw new RuntimeException("Operator '>' cannot be applied to '%s', 'Int'."
+                .formatted(getClass().getSimpleName()));
+    }
+
+    Value gt(Bool other) {
+        throw new RuntimeException("Operator '>' cannot be applied to '%s', 'Bool'."
+                .formatted(getClass().getSimpleName()));
+    }
+
+    Value gt(Str other) {
+        throw new RuntimeException("Operator '>' cannot be applied to '%s', 'Str'."
+                .formatted(getClass().getSimpleName()));
+    }
+
+    public final Value gte(Value other) {
+        if (other instanceof Int i) {
+            return gte(i);
+        } else if (other instanceof Bool b) {
+            return gte(b);
+        } else if (other instanceof Str s) {
+            return gte(s);
+        } else {
+            throw new RuntimeException("Undefined handling of operation '>=' for type '" + other.getClass().getSimpleName() + "', update this code.");
+        }
+    }
+
+    Value gte(Int other) {
+        throw new RuntimeException("Operator '>=' cannot be applied to '%s', 'Int'."
+                .formatted(getClass().getSimpleName()));
+    }
+
+    Value gte(Bool other) {
+        throw new RuntimeException("Operator '>=' cannot be applied to '%s', 'Bool'."
+                .formatted(getClass().getSimpleName()));
+    }
+
+    Value gte(Str other) {
+        throw new RuntimeException("Operator '>=' cannot be applied to '%s', 'Str'."
+                .formatted(getClass().getSimpleName()));
+    }
 }
