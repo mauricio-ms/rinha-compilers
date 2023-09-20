@@ -1,3 +1,5 @@
+import java.util.Objects;
+
 class Str extends Value {
 
     private final String v;
@@ -20,6 +22,21 @@ class Str extends Value {
     @Override
     public Value add(Str other) {
         return new Str(v + other.v());
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Str str = (Str) o;
+
+        return Objects.equals(v, str.v);
+    }
+
+    @Override
+    public int hashCode() {
+        return v != null ? v.hashCode() : 0;
     }
 
     @Override

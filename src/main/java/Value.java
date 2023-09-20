@@ -15,7 +15,7 @@ public abstract class Value {
         return new Str(v);
     }
 
-    public Value add(Value other) {
+    public final Value add(Value other) {
         if (other instanceof Int i) {
             return add(i);
         } else if (other instanceof Bool b) {
@@ -42,7 +42,7 @@ public abstract class Value {
                 .formatted(getClass().getSimpleName()));
     }
 
-    public Value sub(Value other) {
+    public final Value sub(Value other) {
         if (other instanceof Int i) {
             return sub(i);
         } else if (other instanceof Bool b) {
@@ -69,7 +69,7 @@ public abstract class Value {
                 .formatted(getClass().getSimpleName()));
     }
 
-    public Value mul(Value other) {
+    public final Value mul(Value other) {
         if (other instanceof Int i) {
             return mul(i);
         } else if (other instanceof Bool b) {
@@ -96,7 +96,7 @@ public abstract class Value {
                 .formatted(getClass().getSimpleName()));
     }
 
-    public Value div(Value other) {
+    public final Value div(Value other) {
         if (other instanceof Int i) {
             return div(i);
         } else if (other instanceof Bool b) {
@@ -123,7 +123,7 @@ public abstract class Value {
                 .formatted(getClass().getSimpleName()));
     }
 
-    public Value rem(Value other) {
+    public final Value rem(Value other) {
         if (other instanceof Int i) {
             return rem(i);
         } else if (other instanceof Bool b) {
@@ -148,5 +148,13 @@ public abstract class Value {
     Value rem(Str other) {
         throw new RuntimeException("Operator '%%' cannot be applied to '%s', 'Str'."
                 .formatted(getClass().getSimpleName()));
+    }
+
+    public final Value eq(Value other) {
+        return new Bool(this.equals(other));
+    }
+
+    public final Value neq(Value other) {
+        return new Bool(!this.equals(other));
     }
 }

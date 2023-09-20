@@ -12,6 +12,21 @@ class Bool extends Value {
     // TODO - Bool cannot add or be added to any type?
 
     @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Bool bool = (Bool) o;
+
+        return v == bool.v;
+    }
+
+    @Override
+    public int hashCode() {
+        return (v ? 1 : 0);
+    }
+
+    @Override
     public String toString() {
         return String.valueOf(v);
     }

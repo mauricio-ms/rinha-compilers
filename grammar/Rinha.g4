@@ -34,6 +34,7 @@ formalParameterList
 singleExpression
     : singleExpression bop=('*' | '/' | '%') singleExpression
     | singleExpression bop=('+' | '-') singleExpression
+    | singleExpression bop=('==' | '!=') singleExpression
     | functionCall
     | ifStatement
     | literal

@@ -1,1 +1,16 @@
-print (3  + 5 + 10 -2 - 2 * 2 / 2 % 2);
+print (3  + 5 + 10 -2 - 2 * 2 / 2 % 2 + 1)
+
+print ("==")
+print ("a" == "a")
+print ("a" == "b")
+print (2 == 1 + 1)
+print(true == true)
+print(true == false)
+
+print ("!=")
+print ("a" != "a")
+print ("a" != "b")
+print (3 != 1 + 1)
+print (3 != 1 + 1 + 1)
+print (true != true)
+print (true != false)
