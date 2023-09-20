@@ -265,4 +265,58 @@ public abstract class Value {
         throw new RuntimeException("Operator '>=' cannot be applied to '%s', 'Str'."
                 .formatted(getClass().getSimpleName()));
     }
+
+    public final Value and(Value other) {
+        if (other instanceof Int i) {
+            return and(i);
+        } else if (other instanceof Bool b) {
+            return and(b);
+        } else if (other instanceof Str s) {
+            return and(s);
+        } else {
+            throw new RuntimeException("Undefined handling of operation '&&' for type '" + other.getClass().getSimpleName() + "', update this code.");
+        }
+    }
+
+    Value and(Int other) {
+        throw new RuntimeException("Operator '&&' cannot be applied to '%s', 'Int'."
+                .formatted(getClass().getSimpleName()));
+    }
+
+    Value and(Bool other) {
+        throw new RuntimeException("Operator '&&' cannot be applied to '%s', 'Bool'."
+                .formatted(getClass().getSimpleName()));
+    }
+
+    Value and(Str other) {
+        throw new RuntimeException("Operator '&&' cannot be applied to '%s', 'Str'."
+                .formatted(getClass().getSimpleName()));
+    }
+
+    public final Value or(Value other) {
+        if (other instanceof Int i) {
+            return or(i);
+        } else if (other instanceof Bool b) {
+            return or(b);
+        } else if (other instanceof Str s) {
+            return or(s);
+        } else {
+            throw new RuntimeException("Undefined handling of operation '||' for type '" + other.getClass().getSimpleName() + "', update this code.");
+        }
+    }
+
+    Value or(Int other) {
+        throw new RuntimeException("Operator '||' cannot be applied to '%s', 'Int'."
+                .formatted(getClass().getSimpleName()));
+    }
+
+    Value or(Bool other) {
+        throw new RuntimeException("Operator '||' cannot be applied to '%s', 'Bool'."
+                .formatted(getClass().getSimpleName()));
+    }
+
+    Value or(Str other) {
+        throw new RuntimeException("Operator '||' cannot be applied to '%s', 'Str'."
+                .formatted(getClass().getSimpleName()));
+    }
 }
