@@ -93,4 +93,31 @@ public abstract class Value {
         throw new RuntimeException("Operator '*' cannot be applied to '%s', 'Str'."
                 .formatted(getClass().getSimpleName()));
     }
+
+    public Value div(Value other) {
+        if (other instanceof Int i) {
+            return div(i);
+        } else if (other instanceof Bool b) {
+            return div(b);
+        } else if (other instanceof Str s) {
+            return div(s);
+        } else {
+            throw new RuntimeException("Undefined handling of operation '/' for type '" + other.getClass().getSimpleName() + "', update this code.");
+        }
+    }
+
+    Value div(Int other) {
+        throw new RuntimeException("Operator '/' cannot be applied to '%s', 'Int'."
+                .formatted(getClass().getSimpleName()));
+    }
+
+    Value div(Bool other) {
+        throw new RuntimeException("Operator '/' cannot be applied to '%s', 'Bool'."
+                .formatted(getClass().getSimpleName()));
+    }
+
+    Value div(Str other) {
+        throw new RuntimeException("Operator '/' cannot be applied to '%s', 'Str'."
+                .formatted(getClass().getSimpleName()));
+    }
 }

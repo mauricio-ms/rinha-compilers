@@ -20,9 +20,10 @@ public class RinhaToJava extends RinhaBaseVisitor<Value> {
         Value leftValue = visitSingleExpression(leftExpr);
         Value rightValue = visitSingleExpression(rightExpr);
         return switch (bop) {
+            case "*" -> leftValue.mul(rightValue);
+            case "/" -> leftValue.div(rightValue);
             case "+" -> leftValue.add(rightValue);
             case "-" -> leftValue.sub(rightValue);
-            case "*" -> leftValue.mul(rightValue);
             default -> throw new RuntimeException("Binary Operation '" + bop + "' cannot be parsed.");
         };
     }

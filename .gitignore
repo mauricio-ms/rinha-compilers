@@ -1,5 +1,8 @@
 # Generated code
-libs/
+src/main/java/antlr/
 
-# Compiled code
-build/
+# IDEs
+.idea/
+
+# Compiled Code
+.gradle/
