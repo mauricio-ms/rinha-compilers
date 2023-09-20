@@ -66,4 +66,31 @@ public abstract class Value {
         throw new RuntimeException("Operator '-' cannot be applied to '%s', 'Str'."
                 .formatted(getClass().getSimpleName()));
     }
+
+    public Value mul(Value other) {
+        if (other instanceof Int i) {
+            return mul(i);
+        } else if (other instanceof Bool b) {
+            return mul(b);
+        } else if (other instanceof Str s) {
+            return mul(s);
+        } else {
+            throw new RuntimeException("Undefined handling of operation '*' for type '" + other.getClass().getSimpleName() + "', update this code.");
+        }
+    }
+
+    Value mul(Int other) {
+        throw new RuntimeException("Operator '*' cannot be applied to '%s', 'Int'."
+                .formatted(getClass().getSimpleName()));
+    }
+
+    Value mul(Bool other) {
+        throw new RuntimeException("Operator '*' cannot be applied to '%s', 'Bool'."
+                .formatted(getClass().getSimpleName()));
+    }
+
+    Value mul(Str other) {
+        throw new RuntimeException("Operator '*' cannot be applied to '%s', 'Str'."
+                .formatted(getClass().getSimpleName()));
+    }
 }

@@ -26,6 +26,11 @@ class Int extends Value {
     }
 
     @Override
+    Value mul(Int other) {
+        return new Int(v * other.v());
+    }
+
+    @Override
     public String toString() {
         return String.valueOf(v);
     }

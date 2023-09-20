@@ -22,6 +22,7 @@ public class RinhaToJava extends RinhaBaseVisitor<Value> {
         return switch (bop) {
             case "+" -> leftValue.add(rightValue);
             case "-" -> leftValue.sub(rightValue);
+            case "*" -> leftValue.mul(rightValue);
             default -> throw new RuntimeException("Binary Operation '" + bop + "' cannot be parsed.");
         };
     }
