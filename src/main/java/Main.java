@@ -3,7 +3,6 @@ import java.io.IOException;
 
 import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.CommonTokenStream;
-import org.antlr.v4.runtime.tree.ParseTreeWalker;
 
 import antlr.RinhaLexer;
 import antlr.RinhaParser;
@@ -20,9 +19,8 @@ public class Main {
             var parser = new RinhaParser(tokens);
             parser.setBuildParseTree(true);
             var tree = parser.compilationUnit().getRuleContext();
-            var visitor = new RinhaToJavaVisitor();
+            var visitor = new RinhaToJava();
             visitor.visit(tree);
-            //ParseTreeWalker.DEFAULT.walk(listener, tree);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

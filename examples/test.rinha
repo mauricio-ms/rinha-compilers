@@ -8,4 +8,4 @@ let sum = fn (n) => {
   }
 };
 
-print (sum(29));
+print (sum(29, 2));

@@ -1,97 +1,86 @@
-import antlr.RinhaBaseListener;
+import antlr.RinhaBaseVisitor;
 import antlr.RinhaParser;
 import org.antlr.v4.runtime.tree.ParseTree;
-import org.antlr.v4.runtime.tree.TerminalNode;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 
-public class RinhaToJava extends RinhaBaseListener {
+public class RinhaToJava extends RinhaBaseVisitor<Value> {
 
-    private final Map<String, Value> variables = new HashMap<>();
-    private final Map<String, Function> functions = new HashMap<>();
+    private final RinhaProgram rinhaProgram = new RinhaProgram();
 
     @Override
-    public void enterVariableDeclaration(RinhaParser.VariableDeclarationContext ctx) {
-        variables.put(ctx.assignable().getText(), evaluateSingleExpression(ctx.singleExpression()));
+    public Value visitBlock(RinhaParser.BlockContext ctx) {
+        Value value = null;
+        for (var statement : ctx.statement()) {
+            value = visitStatement(statement);
+        }
+        return value;
     }
 
     @Override
-    public void enterFunctionDeclaration(RinhaParser.FunctionDeclarationContext ctx) {
-        functions.put(
+    public Value visitVariableDeclaration(RinhaParser.VariableDeclarationContext ctx) {
+        rinhaProgram.declareVariable(ctx.assignable().getText(), visitSingleExpression(ctx.singleExpression()));
+        return visitChildren(ctx);
+    }
+
+    @Override
+    public Value visitFunctionDeclaration(RinhaParser.FunctionDeclarationContext ctx) {
+        rinhaProgram.declareFunction(
                 ctx.ID().getText(),
-                new Function(ctx.formalParameterList().ID().stream().map(ParseTree::getText).toList(), ctx.statement())
+                new Function(ctx.formalParameterList().ID().stream().map(ParseTree::getText).toList(), ctx.block())
         );
-    }
-
-    @Override
-    public void enterPrint(RinhaParser.PrintContext ctx) {
-        System.out.println(evaluateSingleExpression(ctx.singleExpression()).value());
-    }
-
-    private Value evaluateSingleExpression(RinhaParser.SingleExpressionContext ctx) {
-        return Optional.ofNullable(ctx.functionCall())
-                .map(this::evaluateFunction)
-                .or(() -> Optional.ofNullable(ctx.ifStatement())
-                        .map(this::evaluateIfStatement))
-                .or(() -> Optional.ofNullable(ctx.literal())
-                        .map(this::evaluateLiteral))
-                .or(() -> Optional.ofNullable(ctx.ID())
-                        .map(this::evaluateVariable))
-                .orElseThrow(() -> new RuntimeException("Expression " + ctx.getText() + " cannot be evaluated."));
-    }
-
-    private Value evaluateFunction(RinhaParser.FunctionCallContext ctx) {
-        // TODO - Throws exception if function doesn't exists
-        Function function = functions.get(ctx.ID().getText());
-        var statements = function.statements();
-        if (statements.isEmpty()) {
-            return null;
-        }
-
-        List<String> parameters = function.parameters();
-        var expressions = ctx.singleExpressionList().singleExpression();
-        for (int i = 0; i < parameters.size(); i++) {
-            // TODO - Implement shadowing
-            variables.put(parameters.get(i), evaluateSingleExpression(expressions.get(i)));
-        }
-
-        // TODO - will break with multiple expressions
-        return evaluateStatement(statements.get(statements.size() - 1));
-    }
-
-    private Value evaluateStatement(RinhaParser.StatementContext ctx) {
-        var singleExpression = ctx.singleExpression();
-        if (singleExpression != null) {
-            return evaluateSingleExpression(singleExpression);
-        }
         return null;
     }
 
-    // TODO - else if can exists?
-    private Value evaluateIfStatement(RinhaParser.IfStatementContext ctx) {
-        boolean ifClause = evaluateBooleanExpression(ctx.singleExpression());
+    @Override
+    public Value visitPrint(RinhaParser.PrintContext ctx) {
+        Value expressionValue = visitSingleExpression(ctx.singleExpression());
+        rinhaProgram.println(expressionValue.value());
+        return expressionValue;
+    }
 
-        // TODO - will break with multiple expressions
-        int blockStatementsIndex = ifClause ? 0 : ctx.ELSE() != null ? 1 : -1;
+    @Override
+    public Value visitFunctionCall(RinhaParser.FunctionCallContext ctx) {
+        String functionName = ctx.ID().getText();
+        Function function = rinhaProgram.loadFunction(functionName);
+
+        List<String> parameters = function.parameters();
+        var expressions = ctx.singleExpressionList().singleExpression();
+        if (parameters.size() != expressions.size()) {
+            String prefixMessage = parameters.size() == 0 ? "No parameter expected" :
+                    parameters.size() == 1 ? "Expected 1 parameter" :
+                            "Expected " + parameters.size() + " parameters";
+            throw new RuntimeException(prefixMessage + " for function '" + ctx.ID().getText() + "' but found " + expressions.size());
+        }
+
+        for (int i = 0; i < parameters.size(); i++) {
+            // TODO - Implement shadowing
+            rinhaProgram.declareVariable(parameters.get(i), visitSingleExpression(expressions.get(i)));
+        }
+
+        return visitBlock(function.block());
+    }
+
+    // TODO - else if can exists?
+    @Override
+    public Value visitIfStatement(RinhaParser.IfStatementContext ctx) {
+        Value ifClause = visitSingleExpression(ctx.singleExpression());
+        if (ifClause.type() != Value.Type.BOOL) {
+            throw new RuntimeException("'" + ctx.getText() + " is not a boolean expression");
+        }
+
+        int blockStatementsIndex = (boolean) ifClause.value() ? 0 : ctx.ELSE() != null ? 1 : -1;
         if (blockStatementsIndex == -1) {
             throw new RuntimeException("if statement malformed '" + ctx.getText() + "'.");
         }
 
-        var ifBlockStatements = ctx.block(blockStatementsIndex).statement();
-        return evaluateStatement(ifBlockStatements.get(ifBlockStatements.size() - 1));
+        var block = ctx.block(blockStatementsIndex);
+        return visitBlock(block);
     }
 
-    private boolean evaluateBooleanExpression(RinhaParser.SingleExpressionContext ctx) {
-        return Optional.ofNullable(evaluateSingleExpression(ctx))
-                .filter(v -> v.type() == Value.Type.BOOL)
-                .map(v -> (boolean) v.value())
-                .orElseThrow(() -> new RuntimeException("'" + ctx.getText() + " is not a boolean expression"));
-    }
-
-    private Value evaluateLiteral(RinhaParser.LiteralContext ctx) {
+    @Override
+    public Value visitLiteral(RinhaParser.LiteralContext ctx) {
         return Optional.ofNullable(ctx.INT())
                 .map(x -> new Value(Value.Type.INT, x.getText()))
                 .or(() -> Optional.ofNullable(ctx.BOOL())
@@ -101,8 +90,8 @@ public class RinhaToJava extends RinhaBaseListener {
                 .orElseThrow(() -> new RuntimeException("Cannot evaluate literal '" + ctx.getText() + "'."));
     }
 
-    private Value evaluateVariable(TerminalNode terminalNode) {
-        return Optional.ofNullable(variables.get(terminalNode.getText()))
-                .orElseThrow(() -> new RuntimeException("Variable '" + terminalNode.getText() + "' not declared."));
+    @Override
+    public Value visitId(RinhaParser.IdContext ctx) {
+        return rinhaProgram.readVariable(ctx.getText());
     }
 }
