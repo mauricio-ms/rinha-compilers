@@ -1,4 +1,5 @@
 class Str extends Value {
+
     private final String v;
     Str(String v) {
         this.v = v;
@@ -14,11 +15,8 @@ class Str extends Value {
     }
 
     // TODO - Int + Bool not allowed?
-    @Override
-    public Value add(Bool other) {
-        throw new RuntimeException("Operator '+' cannot be applied to 'Str', 'Bool'.");
-    }
 
+    // TODO - 2 + "a" should be "2a", not 2"a", besides that, check the print output
     @Override
     public Value add(Str other) {
         return new Str(v + other.v());
