@@ -25,7 +25,7 @@ assignable
     ;
 
 functionDeclaration
-    : 'let' ID '=' 'fn' '(' formalParameterList? ')' '=' '>' '{' statement* '}' ';'? ;
+    : 'let' ID '=' 'fn' '(' formalParameterList? ')' '=' '>' block ';'? ;
 
 formalParameterList
     : ID (',' ID)*
@@ -35,7 +35,7 @@ singleExpression
     : functionCall
     | ifStatement
     | literal
-    | ID
+    | id
     ;
 
 functionCall
@@ -51,6 +51,8 @@ literal
     | BOOL
     | STRING
     ;
+
+id: ID ;
 
 ifStatement
     : 'if' '(' singleExpression ')' block (ELSE block)?

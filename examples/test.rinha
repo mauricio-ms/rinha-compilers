@@ -1,8 +1,10 @@
+let y = 11
 let sum = fn (n) => {
-  if (false) {
-    1
+  if (true) {
+    let x = 3
+    y
   } else {
-    2
+    x
   }
 };
 
