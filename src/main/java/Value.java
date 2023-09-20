@@ -1,6 +1,8 @@
 // TODO - Improve memory usage by not recreating types in the bin op's
 public abstract class Value {
 
+    // TODO - Doesn't have parenthesized expressions?
+
     static Value getInt(String v) {
         return new Int(Integer.parseInt(v));
     }
@@ -118,6 +120,33 @@ public abstract class Value {
 
     Value div(Str other) {
         throw new RuntimeException("Operator '/' cannot be applied to '%s', 'Str'."
+                .formatted(getClass().getSimpleName()));
+    }
+
+    public Value rem(Value other) {
+        if (other instanceof Int i) {
+            return rem(i);
+        } else if (other instanceof Bool b) {
+            return rem(b);
+        } else if (other instanceof Str s) {
+            return rem(s);
+        } else {
+            throw new RuntimeException("Undefined handling of operation '%' for type '" + other.getClass().getSimpleName() + "', update this code.");
+        }
+    }
+
+    Value rem(Int other) {
+        throw new RuntimeException("Operator '%%' cannot be applied to '%s', 'Int'."
+                .formatted(getClass().getSimpleName()));
+    }
+
+    Value rem(Bool other) {
+        throw new RuntimeException("Operator '%%' cannot be applied to '%s', 'Bool'."
+                .formatted(getClass().getSimpleName()));
+    }
+
+    Value rem(Str other) {
+        throw new RuntimeException("Operator '%%' cannot be applied to '%s', 'Str'."
                 .formatted(getClass().getSimpleName()));
     }
 }

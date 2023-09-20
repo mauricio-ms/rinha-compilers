@@ -36,6 +36,11 @@ class Int extends Value {
     }
 
     @Override
+    public Value rem(Int other) {
+        return new Int(v % other.v());
+    }
+
+    @Override
     public String toString() {
         return String.valueOf(v);
     }

@@ -6,3 +6,4 @@ src/main/java/antlr/
 
 # Compiled Code
 .gradle/
+build/
