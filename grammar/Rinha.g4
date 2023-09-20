@@ -32,7 +32,8 @@ formalParameterList
     ;
 
 singleExpression
-    : functionCall
+    : singleExpression bop=('+' | '-') singleExpression
+    | functionCall
     | ifStatement
     | literal
     | id

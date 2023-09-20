@@ -1,11 +1,1 @@
-let y = 11
-let sum = fn (n) => {
-  if (true) {
-    let x = 3
-    y
-  } else {
-    x
-  }
-};
-
-print (sum(29, 2));
+print (3  + 5 + 10);

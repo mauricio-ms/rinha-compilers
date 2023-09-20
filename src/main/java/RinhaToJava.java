@@ -10,6 +10,22 @@ public class RinhaToJava extends RinhaBaseVisitor<Value> {
     private final RinhaProgram rinhaProgram = new RinhaProgram();
 
     @Override
+    public Value visitSingleExpression(RinhaParser.SingleExpressionContext ctx) {
+        return Optional.ofNullable(ctx.bop)
+                .map(bop -> evaluateBinOp(bop.getText(), ctx.singleExpression(0), ctx.singleExpression(1)))
+                .orElseGet(() -> visitChildren(ctx));
+    }
+
+    private Value evaluateBinOp(String bop, RinhaParser.SingleExpressionContext leftExpr, RinhaParser.SingleExpressionContext rightExpr) {
+        Value leftValue = visitSingleExpression(leftExpr);
+        Value rightValue = visitSingleExpression(rightExpr);
+        return switch (bop) {
+            case "+" -> leftValue.add(rightValue);
+            default -> throw new RuntimeException("Binary Operation '" + bop + "' cannot be parsed.");
+        };
+    }
+
+    @Override
     public Value visitBlock(RinhaParser.BlockContext ctx) {
         Value value = null;
         for (var statement : ctx.statement()) {
@@ -18,6 +34,8 @@ public class RinhaToJava extends RinhaBaseVisitor<Value> {
         return value;
     }
 
+    // TODO - Rule name ID?
+    // TODO - Reserved words?
     @Override
     public Value visitVariableDeclaration(RinhaParser.VariableDeclarationContext ctx) {
         rinhaProgram.declareVariable(ctx.assignable().getText(), visitSingleExpression(ctx.singleExpression()));
@@ -36,7 +54,7 @@ public class RinhaToJava extends RinhaBaseVisitor<Value> {
     @Override
     public Value visitPrint(RinhaParser.PrintContext ctx) {
         Value expressionValue = visitSingleExpression(ctx.singleExpression());
-        rinhaProgram.println(expressionValue.value());
+        rinhaProgram.println(expressionValue);
         return expressionValue;
     }
 
@@ -48,7 +66,7 @@ public class RinhaToJava extends RinhaBaseVisitor<Value> {
         List<String> parameters = function.parameters();
         var expressions = ctx.singleExpressionList().singleExpression();
         if (parameters.size() != expressions.size()) {
-            String prefixMessage = parameters.size() == 0 ? "No parameter expected" :
+            String prefixMessage = parameters.isEmpty() ? "No parameter expected" :
                     parameters.size() == 1 ? "Expected 1 parameter" :
                             "Expected " + parameters.size() + " parameters";
             throw new RuntimeException(prefixMessage + " for function '" + ctx.ID().getText() + "' but found " + expressions.size());
@@ -66,27 +84,28 @@ public class RinhaToJava extends RinhaBaseVisitor<Value> {
     @Override
     public Value visitIfStatement(RinhaParser.IfStatementContext ctx) {
         Value ifClause = visitSingleExpression(ctx.singleExpression());
-        if (ifClause.type() != Value.Type.BOOL) {
+
+        if (ifClause instanceof Bool ifClauseBool) {
+            int blockStatementsIndex = ifClauseBool.v() ? 0 : ctx.ELSE() != null ? 1 : -1;
+            if (blockStatementsIndex == -1) {
+                throw new RuntimeException("if statement malformed '" + ctx.getText() + "'.");
+            }
+
+            var block = ctx.block(blockStatementsIndex);
+            return visitBlock(block);
+        } else {
             throw new RuntimeException("'" + ctx.getText() + " is not a boolean expression");
         }
-
-        int blockStatementsIndex = (boolean) ifClause.value() ? 0 : ctx.ELSE() != null ? 1 : -1;
-        if (blockStatementsIndex == -1) {
-            throw new RuntimeException("if statement malformed '" + ctx.getText() + "'.");
-        }
-
-        var block = ctx.block(blockStatementsIndex);
-        return visitBlock(block);
     }
 
     @Override
     public Value visitLiteral(RinhaParser.LiteralContext ctx) {
         return Optional.ofNullable(ctx.INT())
-                .map(x -> new Value(Value.Type.INT, x.getText()))
+                .map(x -> Value.getInt(x.getText()))
                 .or(() -> Optional.ofNullable(ctx.BOOL())
-                        .map(x -> new Value(Value.Type.BOOL, Boolean.parseBoolean(x.getText()))))
+                        .map(x -> Value.getBool(x.getText())))
                 .or(() -> Optional.ofNullable(ctx.STRING())
-                        .map(x -> new Value(Value.Type.STRING, x.getText())))
+                        .map(x -> Value.getStr(x.getText())))
                 .orElseThrow(() -> new RuntimeException("Cannot evaluate literal '" + ctx.getText() + "'."));
     }
 

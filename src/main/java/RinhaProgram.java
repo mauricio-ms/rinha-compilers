@@ -24,7 +24,7 @@ public class RinhaProgram {
         return functions.get(name);
     }
 
-    public void println(Object message) {
-        System.out.println(message);
+    public void println(Value value) {
+        System.out.println(value);
     }
 }
