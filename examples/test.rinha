@@ -1,5 +1,9 @@
-print(true && false)
-print(true && true)
-print(false || true)
-print(false || false)
-print(true || true)
+let test = fn (n) => {
+  print ("fn: " + n)
+};
+
+let n = 3
+test(11)
+print ("global: " + n)
+let n = n + 2
+print (n)

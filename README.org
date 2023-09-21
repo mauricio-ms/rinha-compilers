@@ -18,6 +18,7 @@
 # TODO
 - Check ; usage in expressions
 - Make scape in strings work
+- Test if assignment generates error
 
 # DOUBTS
 - As operações binárias são possíveis para qualquer expressão que retorne valor, como if, print, etc?

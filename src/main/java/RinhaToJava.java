@@ -10,6 +10,12 @@ public class RinhaToJava extends RinhaBaseVisitor<Value> {
     private final RinhaProgram rinhaProgram = new RinhaProgram();
 
     @Override
+    public Value visitCompilationUnit(RinhaParser.CompilationUnitContext ctx) {
+        rinhaProgram.setCurrentScope(new GlobalScope());
+        return visitChildren(ctx);
+    }
+
+    @Override
     public Value visitSingleExpression(RinhaParser.SingleExpressionContext ctx) {
         return Optional.ofNullable(ctx.bop)
                 .map(bop -> evaluateBinOp(bop.getText(), ctx.singleExpression(0), ctx.singleExpression(1)))
@@ -57,7 +63,10 @@ public class RinhaToJava extends RinhaBaseVisitor<Value> {
     public Value visitFunctionDeclaration(RinhaParser.FunctionDeclarationContext ctx) {
         rinhaProgram.declareFunction(
                 ctx.ID().getText(),
-                new Function(ctx.formalParameterList().ID().stream().map(ParseTree::getText).toList(), ctx.block())
+                new Function(
+                        ctx.formalParameterList().ID().stream().map(ParseTree::getText).toList(),
+                        ctx.block()
+                )
         );
         return null;
     }
@@ -83,12 +92,14 @@ public class RinhaToJava extends RinhaBaseVisitor<Value> {
             throw new RuntimeException(prefixMessage + " for function '" + ctx.ID().getText() + "' but found " + expressions.size());
         }
 
+        rinhaProgram.setCurrentScope(new FunctionScope(rinhaProgram.currentScope(), functionName));
         for (int i = 0; i < parameters.size(); i++) {
-            // TODO - Implement shadowing
             rinhaProgram.declareVariable(parameters.get(i), visitSingleExpression(expressions.get(i)));
         }
 
-        return visitBlock(function.block());
+        Value blockReturn = visitBlock(function.block());
+        rinhaProgram.deleteCurrentScope();
+        return blockReturn;
     }
 
     // TODO - else if can exists?

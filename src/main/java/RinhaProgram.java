@@ -1,27 +1,36 @@
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Optional;
 
 public class RinhaProgram {
-    private final Map<String, Value> variables = new HashMap<>();
-    private final Map<String, Function> functions = new HashMap<>();
+    private Scope currentScope;
 
     public void declareVariable(String name, Value value) {
-        variables.put(name, value);
+        currentScope.declare(name, value);
+    }
+
+    public Scope currentScope() {
+        return currentScope;
+    }
+
+    public void setCurrentScope(Scope currentScope) {
+        this.currentScope = currentScope;
+    }
+
+    public void deleteCurrentScope() {
+        currentScope = currentScope.enclosing();
     }
 
     public Value readVariable(String name) {
-        return Optional.ofNullable(variables.get(name))
+        return Optional.ofNullable(currentScope.resolveVariable(name))
                 .orElseThrow(() -> new RuntimeException("Variable '" + name + "' not declared."));
     }
 
     public void declareFunction(String name, Function function) {
-        functions.put(name, function);
+        currentScope.declare(name, function);
     }
 
     public Function loadFunction(String name) {
         // TODO - Throws exception if function is not declared
-        return functions.get(name);
+        return currentScope.resolveFunction(name);
     }
 
     public void println(Value value) {
