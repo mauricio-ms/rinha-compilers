@@ -133,6 +133,6 @@ public class RinhaToJava extends RinhaBaseVisitor<Value> {
 
     @Override
     public Value visitId(RinhaParser.IdContext ctx) {
-        return rinhaProgram.readVariable(ctx.getText());
+        return rinhaProgram.resolve(ctx.getText());
     }
 }

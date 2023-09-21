@@ -1,3 +1,26 @@
 let a = "abc" ;
 
 print (a) ;
+
+print ("def")
+
+print (1)
+
+let x = 21
+
+print (x)
+
+print (true)
+
+print   (false)
+
+let t = true
+
+let f = false
+
+print (f)
+print (t)
+
+let fun = fn(x) => {}
+
+print (fun)

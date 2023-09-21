@@ -18,6 +18,9 @@
 # TODO
 - Make scape in strings work
 - Test if assignment generates error
+- define anonymous function, i.e, without let
+- test declare function and variable as _
+- test call function with wrong number of args
 
 # DOUBTS
 - As operações binárias são possíveis para qualquer expressão que retorne valor, como if, print, etc?

@@ -19,9 +19,10 @@ public class RinhaProgram {
         currentScope = currentScope.enclosing();
     }
 
-    public Value readVariable(String name) {
+    public Value resolve(String name) {
         return Optional.ofNullable(currentScope.resolveVariable(name))
-                .orElseThrow(() -> new RuntimeException("Variable '" + name + "' not declared."));
+                .or(() -> Optional.ofNullable(currentScope.resolveFunction(name)))
+                .orElseThrow(() -> new RuntimeException("Symbol '" + name + "' not declared."));
     }
 
     public void declareFunction(String name, Function function) {
