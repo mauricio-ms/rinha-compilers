@@ -10,32 +10,24 @@ statement
     : block
     | variableDeclaration
     | functionDeclaration
-    | print
     | singleExpression
     ;
 
-block : '{' statement* '}' eos ;
+block
+    : '{' statement* '}' eos ;
 
 variableDeclaration
-    : 'let' assignable '=' singleExpression eos
-    ;
+    : 'let' assignable '=' singleExpression eos ;
 
-assignable
-    : ID
-    ;
+assignable : ID ;
 
 functionDeclaration
     : 'let' ID '=' 'fn' '(' formalParameterList? ')' '=' '>' block eos ;
 
 formalParameterList
-    : ID (',' ID)*
-    ;
+    : ID (',' ID)* ;
 
-print: 'print' '(' singleExpression ')' eos ;
-
-eos
-    : ';'?
-    ;
+eos: ';'? ;
 
 singleExpression
     : singleExpression bop=('*' | '/' | '%') singleExpression
@@ -46,20 +38,20 @@ singleExpression
     | singleExpression bop='||' singleExpression
     | functionCall
     | ifStatement
+    | print
     | tuple
     | literal
     | id
     ;
 
 functionCall
-    : ID '(' singleExpressionList? ')' eos
-    ;
+    : ID '(' singleExpressionList? ')' eos ;
 
 singleExpressionList
-    : singleExpression (',' singleExpression)*
-    ;
+    : singleExpression (',' singleExpression)* ;
 
-tuple : '(' singleExpression ',' singleExpression ')' ;
+tuple
+    : '(' singleExpression ',' singleExpression ')' ;
 
 literal
     : INT
@@ -70,8 +62,10 @@ literal
 id: ID ;
 
 ifStatement
-    : 'if' '(' singleExpression ')' block (ELSE block)? eos
-    ;
+    : 'if' '(' singleExpression ')' block (ELSE block)? eos ;
+
+print
+    : 'print' '(' singleExpression ')' eos ;
 
 ELSE: 'else' ;
 
@@ -85,5 +79,5 @@ fragment
 fragment
     DIGIT: '0'..'9' ;
 
-STRING : '"' .*? '"' ;
-WS : [ \t\n\r]+ -> skip ;
+STRING: '"' .*? '"' ;
+WS: [ \t\n\r]+ -> skip ;
