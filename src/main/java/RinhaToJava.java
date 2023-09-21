@@ -102,22 +102,12 @@ public class RinhaToJava extends RinhaBaseVisitor<Value> {
         return blockReturn;
     }
 
-    // TODO - else if can exists?
     @Override
-    public Value visitIfStatement(RinhaParser.IfStatementContext ctx) {
-        Value ifClause = visitSingleExpression(ctx.singleExpression());
-
-        if (ifClause instanceof Bool ifClauseBool) {
-            int blockStatementsIndex = ifClauseBool.v() ? 0 : ctx.ELSE() != null ? 1 : -1;
-            if (blockStatementsIndex == -1) {
-                throw new RuntimeException("if statement malformed '" + ctx.getText() + "'.");
-            }
-
-            var block = ctx.block(blockStatementsIndex);
-            return visitBlock(block);
-        } else {
-            throw new RuntimeException("'" + ctx.getText() + " is not a boolean expression");
-        }
+    public Value visitTuple(RinhaParser.TupleContext ctx) {
+        return Value.getTuple(
+                visitSingleExpression(ctx.singleExpression(0)),
+                visitSingleExpression(ctx.singleExpression(1))
+        );
     }
 
     @Override
@@ -134,5 +124,23 @@ public class RinhaToJava extends RinhaBaseVisitor<Value> {
     @Override
     public Value visitId(RinhaParser.IdContext ctx) {
         return rinhaProgram.resolve(ctx.getText());
+    }
+
+    // TODO - else if can exists?
+    @Override
+    public Value visitIfStatement(RinhaParser.IfStatementContext ctx) {
+        Value ifClause = visitSingleExpression(ctx.singleExpression());
+
+        if (ifClause instanceof Bool ifClauseBool) {
+            int blockStatementsIndex = ifClauseBool.v() ? 0 : ctx.ELSE() != null ? 1 : -1;
+            if (blockStatementsIndex == -1) {
+                throw new RuntimeException("if statement malformed '" + ctx.getText() + "'.");
+            }
+
+            var block = ctx.block(blockStatementsIndex);
+            return visitBlock(block);
+        } else {
+            throw new RuntimeException("'" + ctx.getText() + " is not a boolean expression");
+        }
     }
 }

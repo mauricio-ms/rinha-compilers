@@ -46,6 +46,7 @@ singleExpression
     | singleExpression bop='||' singleExpression
     | functionCall
     | ifStatement
+    | tuple
     | literal
     | id
     ;
@@ -57,6 +58,8 @@ functionCall
 singleExpressionList
     : singleExpression (',' singleExpression)*
     ;
+
+tuple : '(' singleExpression ',' singleExpression ')' ;
 
 literal
     : INT

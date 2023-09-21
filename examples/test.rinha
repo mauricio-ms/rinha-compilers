@@ -24,3 +24,7 @@ print (t)
 let fun = fn(x) => {}
 
 print (fun)
+
+let tp = (1 , 2) ;
+
+print (tp)

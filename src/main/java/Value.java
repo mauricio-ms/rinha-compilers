@@ -18,6 +18,10 @@ public abstract class Value {
         );
     }
 
+    static Value getTuple(Value left, Value right) {
+        return new Tuple(left, right);
+    }
+
     public final Value add(Value other) {
         if (other instanceof Int i) {
             return add(i);
