@@ -12,7 +12,10 @@ public abstract class Value {
     }
 
     static Value getStr(String v) {
-        return new Str(v);
+        return new Str(
+                (v == null || v.charAt(0) != '"') ?
+                        v : v.substring(1, v.length() - 1)
+        );
     }
 
     public final Value add(Value other) {
