@@ -55,8 +55,9 @@ public class RinhaToJava extends RinhaBaseVisitor<Value> {
     // TODO - Reserved words?
     @Override
     public Value visitVariableDeclaration(RinhaParser.VariableDeclarationContext ctx) {
-        rinhaProgram.declareVariable(ctx.assignable().getText(), visitSingleExpression(ctx.singleExpression()));
-        return visitChildren(ctx);
+        Value value = visitSingleExpression(ctx.singleExpression());
+        rinhaProgram.declareVariable(ctx.assignable().getText(), value);
+        return value;
     }
 
     @Override
@@ -69,13 +70,6 @@ public class RinhaToJava extends RinhaBaseVisitor<Value> {
                 )
         );
         return null;
-    }
-
-    @Override
-    public Value visitPrint(RinhaParser.PrintContext ctx) {
-        Value expressionValue = visitSingleExpression(ctx.singleExpression());
-        rinhaProgram.println(expressionValue);
-        return expressionValue;
     }
 
     @Override
@@ -142,5 +136,12 @@ public class RinhaToJava extends RinhaBaseVisitor<Value> {
         } else {
             throw new RuntimeException("'" + ctx.getText() + " is not a boolean expression");
         }
+    }
+
+    @Override
+    public Value visitPrint(RinhaParser.PrintContext ctx) {
+        Value expressionValue = visitSingleExpression(ctx.singleExpression());
+        rinhaProgram.println(expressionValue);
+        return expressionValue;
     }
 }
