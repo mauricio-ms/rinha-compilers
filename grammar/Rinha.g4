@@ -14,10 +14,10 @@ statement
     | singleExpression
     ;
 
-block : '{' statement* '}' ;
+block : '{' statement* '}' eos ;
 
 variableDeclaration
-    : 'let' assignable '=' singleExpression
+    : 'let' assignable '=' singleExpression eos
     ;
 
 assignable
@@ -25,10 +25,16 @@ assignable
     ;
 
 functionDeclaration
-    : 'let' ID '=' 'fn' '(' formalParameterList? ')' '=' '>' block ';'? ;
+    : 'let' ID '=' 'fn' '(' formalParameterList? ')' '=' '>' block eos ;
 
 formalParameterList
     : ID (',' ID)*
+    ;
+
+print: 'print' '(' singleExpression ')' eos ;
+
+eos
+    : ';'?
     ;
 
 singleExpression
@@ -45,7 +51,7 @@ singleExpression
     ;
 
 functionCall
-    : ID '(' singleExpressionList? ')'
+    : ID '(' singleExpressionList? ')' eos
     ;
 
 singleExpressionList
@@ -61,12 +67,10 @@ literal
 id: ID ;
 
 ifStatement
-    : 'if' '(' singleExpression ')' block (ELSE block)?
+    : 'if' '(' singleExpression ')' block (ELSE block)? eos
     ;
 
 ELSE: 'else' ;
-
-print: 'print' '(' singleExpression ')' ;
 
 INT: DIGIT+ ;
 BOOL: 'true' | 'false' ;

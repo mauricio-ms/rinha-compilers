@@ -16,7 +16,6 @@
 #+end_src
 
 # TODO
-- Check ; usage in expressions
 - Make scape in strings work
 - Test if assignment generates error
 
