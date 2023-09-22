@@ -51,27 +51,32 @@ public class RinhaToJava extends RinhaBaseVisitor<Value> {
         return value;
     }
 
+    @Override
+    public Value visitFunctionDeclaration(RinhaParser.FunctionDeclarationContext ctx) {
+        rinhaProgram.declareFunction(
+                ctx.ID().getText(),
+                visitFunctionDefinition(ctx.functionDefinition())
+        );
+        return null;
+    }
+
     // TODO - Rule name ID?
     // TODO - Reserved words?
     @Override
     public Value visitVariableDeclaration(RinhaParser.VariableDeclarationContext ctx) {
         Value value = visitSingleExpression(ctx.singleExpression());
-        rinhaProgram.declareVariable(ctx.assignable().getText(), value);
+        rinhaProgram.declareVariable(ctx.ID().getText(), value);
         return value;
     }
 
     @Override
-    public Value visitFunctionDeclaration(RinhaParser.FunctionDeclarationContext ctx) {
-        rinhaProgram.declareFunction(
-                ctx.ID().getText(),
-                new Function(
-                        Optional.ofNullable(ctx.formalParameterList())
-                                .map(p -> p.ID().stream().map(ParseTree::getText).toList())
-                                .orElseGet(List::of),
-                        ctx.block()
-                )
+    public Function visitFunctionDefinition(RinhaParser.FunctionDefinitionContext ctx) {
+        return new Function(
+                Optional.ofNullable(ctx.formalParameterList())
+                        .map(p -> p.ID().stream().map(ParseTree::getText).toList())
+                        .orElseGet(List::of),
+                ctx.block()
         );
-        return null;
     }
 
     @Override

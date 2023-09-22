@@ -8,8 +8,8 @@ compilationUnit: statement* ;
 
 statement
     : block
-    | variableDeclaration
     | functionDeclaration
+    | variableDeclaration
     | assignment
     | singleExpression
     ;
@@ -17,13 +17,11 @@ statement
 block
     : '{' statement* '}' eos ;
 
-variableDeclaration
-    : 'let' assignable '=' singleExpression eos ;
-
-assignable : ID ;
-
 functionDeclaration
-    : 'let' ID '=' 'fn' '(' formalParameterList? ')' '=' '>' block eos ;
+    : 'let' ID '=' functionDefinition eos ;
+
+variableDeclaration
+    : 'let' ID '=' singleExpression eos ;
 
 formalParameterList
     : ID (',' ID)* ;
@@ -40,6 +38,7 @@ singleExpression
     | singleExpression bop=('==' | '!=') singleExpression
     | singleExpression bop='&&' singleExpression
     | singleExpression bop='||' singleExpression
+    | functionDefinition
     | functionCall
     | ifStatement
     | print
@@ -49,6 +48,9 @@ singleExpression
     | literal
     | id
     ;
+
+functionDefinition
+    : 'fn' '(' formalParameterList? ')' '=' '>' block ;
 
 functionCall
     : ID '(' singleExpressionList? ')' eos ;

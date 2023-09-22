@@ -19,6 +19,7 @@
 - test function composition
 - define gradle in docker
 - check identifier rules in official AST generator
+- execute function from expressions
 
 # DOUBTS
 - As operações binárias são possíveis para qualquer expressão que retorne valor, como if, print, etc?
