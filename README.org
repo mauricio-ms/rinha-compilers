@@ -1,3 +1,8 @@
+* Rinha Compilers
+
+#+ATTR_HTML: :width 1000
+[[./img/banner.png]]
+
 * Building and Running
 
 #+begin_src shell
@@ -14,10 +19,9 @@
 - Make scape in strings work
 - define anonymous function, i.e, without let
 - fix print \n
-- add error for parameter with same names
+- what is var, different from let?
+- add error for parameter and var with same names
 - check if all Term occurrences in SPECS represents the same think in my grammar
-- test function composition
-- define gradle in docker
 - check identifier rules in official AST generator
 - execute function from expressions
 
