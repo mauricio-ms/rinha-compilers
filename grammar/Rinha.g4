@@ -86,10 +86,12 @@ ELSE: 'else' ;
 INT: DIGIT+ ;
 BOOL: 'true' | 'false' ;
 
-ID: LETTER (LETTER|DIGIT)* ;
+ID
+    : '_'
+    | LETTER (LETTER|DIGIT|'_')* ;
 
 fragment
-    LETTER: 'a'..'z' | 'A'..'Z' | '_' ;
+    LETTER: 'a'..'z' | 'A'..'Z' ;
 fragment
     DIGIT: '0'..'9' ;
 

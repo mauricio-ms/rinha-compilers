@@ -1,1 +1,4 @@
-print("aaa\"b\"c")
+let _ = 1
+let a123 = 2
+let A_ = 2
+let 1a = 3
