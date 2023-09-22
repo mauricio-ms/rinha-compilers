@@ -22,6 +22,7 @@
 - test declare function and variable as _
 - test call function with wrong number of args
 - fix print \n
+- add error for parameter with same names
 
 # DOUBTS
 - As operações binárias são possíveis para qualquer expressão que retorne valor, como if, print, etc?

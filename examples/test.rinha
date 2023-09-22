@@ -1,2 +1,4 @@
-print(first(("a", 2)))
-print(second(("a", 2)))
+let sum = fn (n, x) => {
+};
+
+sum(1, 2, 3)

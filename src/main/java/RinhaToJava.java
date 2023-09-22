@@ -65,7 +65,9 @@ public class RinhaToJava extends RinhaBaseVisitor<Value> {
         rinhaProgram.declareFunction(
                 ctx.ID().getText(),
                 new Function(
-                        ctx.formalParameterList().ID().stream().map(ParseTree::getText).toList(),
+                        Optional.ofNullable(ctx.formalParameterList())
+                                .map(p -> p.ID().stream().map(ParseTree::getText).toList())
+                                .orElseGet(List::of),
                         ctx.block()
                 )
         );
@@ -78,12 +80,14 @@ public class RinhaToJava extends RinhaBaseVisitor<Value> {
         Function function = rinhaProgram.loadFunction(functionName);
 
         List<String> parameters = function.parameters();
-        var expressions = ctx.singleExpressionList().singleExpression();
+        var expressions = Optional.ofNullable(ctx.singleExpressionList())
+                .map(RinhaParser.SingleExpressionListContext::singleExpression)
+                .orElseGet(List::of);
         if (parameters.size() != expressions.size()) {
             String prefixMessage = parameters.isEmpty() ? "No parameter expected" :
                     parameters.size() == 1 ? "Expected 1 parameter" :
                             "Expected " + parameters.size() + " parameters";
-            throw new RuntimeException(prefixMessage + " for function '" + ctx.ID().getText() + "' but found " + expressions.size());
+            throw new RuntimeException(prefixMessage + " for function '" + ctx.ID().getText() + "' but found " + expressions.size() + ".");
         }
 
         rinhaProgram.setCurrentScope(new FunctionScope(rinhaProgram.currentScope(), functionName));
