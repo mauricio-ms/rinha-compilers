@@ -1,5 +1,3 @@
-import java.util.Objects;
-
 class Str extends Value {
 
     private final String v;
@@ -16,9 +14,6 @@ class Str extends Value {
         return new Str(v + other.v());
     }
 
-    // TODO - Int + Bool not allowed?
-
-    // TODO - 2 + "a" should be "2a", not 2"a", besides that, check the print output
     @Override
     public Value add(Str other) {
         return new Str(v + other.v());

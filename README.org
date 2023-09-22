@@ -1,31 +1,23 @@
-
 * Building and Running
 
 #+begin_src shell
 
-  # create a build directory to keep the main one clea
-  mkdir build
-  cd build
-  # to run CMake
-  cmake ../
-  # to build
-  make
-  # run the executable
-  ./rinha
+  docker build -t rinha-compilers .
+  docker run rinha-compilers
+
+  # To set a volume with examples
+   docker run --rm -v $(pwd)/examples:/examples rinha-compilers
  
 #+end_src
 
 # TODO
 - Make scape in strings work
-- Test if assignment generates error
 - define anonymous function, i.e, without let
-- test declare function and variable as _
-- test call function with wrong number of args
 - fix print \n
 - add error for parameter with same names
 - check if all Term occurrences in SPECS represents the same think in my grammar
-- After run on docker, test if program is printing to standard output
 - test function composition
+- define gradle in docker
 
 # DOUBTS
 - As operações binárias são possíveis para qualquer expressão que retorne valor, como if, print, etc?

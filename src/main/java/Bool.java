@@ -9,8 +9,6 @@ class Bool extends Value {
         return v;
     }
 
-    // TODO - Bool cannot add or be added to any type?
-
     @Override
     Value and(Bool other) {
         return new Bool(v && other.v());

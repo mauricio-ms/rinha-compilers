@@ -1,7 +1,19 @@
+buildscript {
+    repositories {
+        mavenCentral()
+        gradlePluginPortal()
+    }
+    dependencies {
+        classpath "gradle.plugin.com.github.johnrengelman:shadow:7.1.2"
+    }
+}
+
 plugins {
     id 'java'
     id 'com.adarshr.test-logger' version '3.2.0'
 }
+
+apply plugin: 'com.github.johnrengelman.shadow'
 
 group = 'br.com.rinhacompilers'
 version = '0.0.1-SNAPSHOT'
@@ -16,6 +28,10 @@ repositories {
 
 dependencies {
     implementation 'org.antlr:antlr4:4.13.1'
+}
+
+tasks.jar {
+    manifest.attributes["Main-Class"] = "Main"
 }
 
 tasks.named('test') {

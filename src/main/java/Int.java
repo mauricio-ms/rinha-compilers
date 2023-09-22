@@ -13,8 +13,6 @@ class Int extends Value {
         return new Int(v + other.v());
     }
 
-    // TODO - Int + Bool not allowed?
-
     @Override
     public Value add(Str other) {
         return new Str(v + other.v());
