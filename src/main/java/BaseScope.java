@@ -18,6 +18,9 @@ abstract class BaseScope implements Scope {
 
     @Override
     public void declare(String name, Value value) {
+        if (symbols.containsKey(name)) {
+            throw new RuntimeException("The symbol '" + name + "' is already declared.");
+        }
         symbols.put(name, value);
     }
 

@@ -1,6 +1,2 @@
-let f = fn(x) => {
-    print(x)
-    x(1)
-}
-
-print(f(fn (x) => { 1 }))
+let a = "global"
+let a = 2
