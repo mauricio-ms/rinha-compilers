@@ -16,15 +16,15 @@ public class RinhaToJava extends RinhaBaseVisitor<Value> {
     }
 
     @Override
-    public Value visitSingleExpression(RinhaParser.SingleExpressionContext ctx) {
+    public Value visitTerm(RinhaParser.TermContext ctx) {
         return Optional.ofNullable(ctx.bop)
-                .map(bop -> evaluateBinOp(bop.getText(), ctx.singleExpression(0), ctx.singleExpression(1)))
+                .map(bop -> evaluateBinOp(bop.getText(), ctx.term(0), ctx.term(1)))
                 .orElseGet(() -> visitChildren(ctx));
     }
 
-    private Value evaluateBinOp(String bop, RinhaParser.SingleExpressionContext leftExpr, RinhaParser.SingleExpressionContext rightExpr) {
-        Value leftValue = visitSingleExpression(leftExpr);
-        Value rightValue = visitSingleExpression(rightExpr);
+    private Value evaluateBinOp(String bop, RinhaParser.TermContext leftExpr, RinhaParser.TermContext rightExpr) {
+        Value leftValue = visitTerm(leftExpr);
+        Value rightValue = visitTerm(rightExpr);
         return switch (bop) {
             case "*" -> leftValue.mul(rightValue);
             case "/" -> leftValue.div(rightValue);
@@ -60,11 +60,10 @@ public class RinhaToJava extends RinhaBaseVisitor<Value> {
         return null;
     }
 
-    // TODO - Rule name ID?
     // TODO - Reserved words?
     @Override
     public Value visitVariableDeclaration(RinhaParser.VariableDeclarationContext ctx) {
-        Value value = visitSingleExpression(ctx.singleExpression());
+        Value value = visitTerm(ctx.term());
         rinhaProgram.declare(ctx.ID().getText(), value);
         return value;
     }
@@ -90,8 +89,8 @@ public class RinhaToJava extends RinhaBaseVisitor<Value> {
         Function function = rinhaProgram.loadFunction(functionName);
 
         List<String> parameters = function.parameters();
-        var expressions = Optional.ofNullable(ctx.singleExpressionList())
-                .map(RinhaParser.SingleExpressionListContext::singleExpression)
+        var expressions = Optional.ofNullable(ctx.termList())
+                .map(RinhaParser.TermListContext::term)
                 .orElseGet(List::of);
         if (parameters.size() != expressions.size()) {
             String prefixMessage = parameters.isEmpty() ? "No parameter expected" :
@@ -102,7 +101,7 @@ public class RinhaToJava extends RinhaBaseVisitor<Value> {
 
         rinhaProgram.setCurrentScope(new FunctionScope(rinhaProgram.currentScope(), functionName));
         for (int i = 0; i < parameters.size(); i++) {
-            rinhaProgram.declare(parameters.get(i), visitSingleExpression(expressions.get(i)));
+            rinhaProgram.declare(parameters.get(i), visitTerm(expressions.get(i)));
         }
 
         Value blockReturn = visitBlock(function.block());
@@ -113,8 +112,8 @@ public class RinhaToJava extends RinhaBaseVisitor<Value> {
     @Override
     public Value visitTuple(RinhaParser.TupleContext ctx) {
         return Value.getTuple(
-                visitSingleExpression(ctx.singleExpression(0)),
-                visitSingleExpression(ctx.singleExpression(1))
+                visitTerm(ctx.term(0)),
+                visitTerm(ctx.term(1))
         );
     }
 
@@ -136,7 +135,7 @@ public class RinhaToJava extends RinhaBaseVisitor<Value> {
 
     @Override
     public Value visitIfStatement(RinhaParser.IfStatementContext ctx) {
-        Value ifClause = visitSingleExpression(ctx.singleExpression());
+        Value ifClause = visitTerm(ctx.term());
 
         if (ifClause instanceof Bool ifClauseBool) {
             int blockStatementsIndex = ifClauseBool.v() ? 0 : ctx.ELSE() != null ? 1 : -1;
@@ -153,14 +152,14 @@ public class RinhaToJava extends RinhaBaseVisitor<Value> {
 
     @Override
     public Value visitPrint(RinhaParser.PrintContext ctx) {
-        Value expressionValue = visitSingleExpression(ctx.singleExpression());
+        Value expressionValue = visitTerm(ctx.term());
         rinhaProgram.println(expressionValue);
         return expressionValue;
     }
 
     @Override
     public Value visitFirst(RinhaParser.FirstContext ctx) {
-        Value value = visitSingleExpression(ctx.singleExpression());
+        Value value = visitTerm(ctx.term());
         if (value instanceof Tuple tuple) {
             return tuple.left();
         } else {
@@ -170,7 +169,7 @@ public class RinhaToJava extends RinhaBaseVisitor<Value> {
 
     @Override
     public Value visitSecond(RinhaParser.SecondContext ctx) {
-        Value value = visitSingleExpression(ctx.singleExpression());
+        Value value = visitTerm(ctx.term());
         if (value instanceof Tuple tuple) {
             return tuple.right();
         } else {

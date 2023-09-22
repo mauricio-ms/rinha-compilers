@@ -11,7 +11,7 @@ statement
     | functionDeclaration
     | variableDeclaration
     | assignment
-    | singleExpression
+    | term
     ;
 
 block
@@ -21,23 +21,23 @@ functionDeclaration
     : 'let' ID '=' functionDefinition eos ;
 
 variableDeclaration
-    : 'let' ID '=' singleExpression eos ;
+    : 'let' ID '=' term eos ;
 
 formalParameterList
     : ID (',' ID)* ;
 
 assignment
-    : ID '=' singleExpression eos ;
+    : ID '=' term eos ;
 
 eos: ';'? ;
 
-singleExpression
-    : singleExpression bop=('*' | '/' | '%') singleExpression
-    | singleExpression bop=('+' | '-') singleExpression
-    | singleExpression bop=('<=' | '>=' | '<' | '>') singleExpression
-    | singleExpression bop=('==' | '!=') singleExpression
-    | singleExpression bop='&&' singleExpression
-    | singleExpression bop='||' singleExpression
+term
+    : term bop=('*' | '/' | '%') term
+    | term bop=('+' | '-') term
+    | term bop=('<=' | '>=' | '<' | '>') term
+    | term bop=('==' | '!=') term
+    | term bop='&&' term
+    | term bop='||' term
     | functionDefinition
     | functionCall
     | ifStatement
@@ -53,13 +53,13 @@ functionDefinition
     : 'fn' '(' formalParameterList? ')' '=' '>' block ;
 
 functionCall
-    : ID '(' singleExpressionList? ')' eos ;
+    : ID '(' termList? ')' eos ;
 
-singleExpressionList
-    : singleExpression (',' singleExpression)* ;
+termList
+    : term (',' term)* ;
 
 tuple
-    : '(' singleExpression ',' singleExpression ')' ;
+    : '(' term ',' term ')' ;
 
 literal
     : INT
@@ -70,16 +70,16 @@ literal
 id: ID ;
 
 ifStatement
-    : 'if' '(' singleExpression ')' block (ELSE block)? eos ;
+    : 'if' '(' term ')' block (ELSE block)? eos ;
 
 print
-    : 'print' '(' singleExpression ')' eos ;
+    : 'print' '(' term ')' eos ;
 
 first
-    : 'first' '(' singleExpression ')' ;
+    : 'first' '(' term ')' ;
 
 second
-    : 'second' '(' singleExpression ')' ;
+    : 'second' '(' term ')' ;
 
 ELSE: 'else' ;
 
