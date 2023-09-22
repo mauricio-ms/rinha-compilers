@@ -7,6 +7,14 @@ class Tuple extends Value {
         this.right = right;
     }
 
+    public Value left() {
+        return left;
+    }
+
+    public Value right() {
+        return right;
+    }
+
     @Override
     public String toString() {
         return "(%s, %s)".formatted(left, right);

@@ -39,6 +39,8 @@ singleExpression
     | functionCall
     | ifStatement
     | print
+    | first
+    | second
     | tuple
     | literal
     | id
@@ -66,6 +68,12 @@ ifStatement
 
 print
     : 'print' '(' singleExpression ')' eos ;
+
+first
+    : 'first' '(' singleExpression ')' ;
+
+second
+    : 'second' '(' singleExpression ')' ;
 
 ELSE: 'else' ;
 

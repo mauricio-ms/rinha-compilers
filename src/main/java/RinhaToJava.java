@@ -144,4 +144,24 @@ public class RinhaToJava extends RinhaBaseVisitor<Value> {
         rinhaProgram.println(expressionValue);
         return expressionValue;
     }
+
+    @Override
+    public Value visitFirst(RinhaParser.FirstContext ctx) {
+        Value value = visitSingleExpression(ctx.singleExpression());
+        if (value instanceof Tuple tuple) {
+            return tuple.left();
+        } else {
+            throw new RuntimeException("'" + value.getClass().getSimpleName() + "' cannot be converted to 'Tuple'.");
+        }
+    }
+
+    @Override
+    public Value visitSecond(RinhaParser.SecondContext ctx) {
+        Value value = visitSingleExpression(ctx.singleExpression());
+        if (value instanceof Tuple tuple) {
+            return tuple.right();
+        } else {
+            throw new RuntimeException("'" + value.getClass().getSimpleName() + "' cannot be converted to 'Tuple'.");
+        }
+    }
 }

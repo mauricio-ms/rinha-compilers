@@ -1,9 +1,2 @@
-let f = fn(x, y, z) => {
-    print ("x: " + x); print ("y: " + y);print ("z: " + z)
-}
-
-f(print(1), print(2), print(3))
-
-print ("====")
-
-let tuple = (print(1), print(2)); print(tuple)
+print(first(("a", 2)))
+print(second(("a", 2)))
