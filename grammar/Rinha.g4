@@ -93,5 +93,6 @@ fragment
 fragment
     DIGIT: '0'..'9' ;
 
-STRING: '"' .*? '"' ;
+STRING: '"' (ESC | ~["\\])* '"' ;
+fragment ESC : '\\' ["\\/bfnrt] ;
 WS: [ \t\n\r]+ -> skip ;

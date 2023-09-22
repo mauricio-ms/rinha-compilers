@@ -15,8 +15,8 @@
  
 #+end_src
 
-# TODO
-- Make scape in strings work
+## Enhancements
+- Remove escape chars in the print output
 - define anonymous function, i.e, without let
 - fix print \n
 - what is var, different from let?
