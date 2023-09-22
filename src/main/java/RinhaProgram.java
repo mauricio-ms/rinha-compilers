@@ -3,10 +3,6 @@ import java.util.Optional;
 public class RinhaProgram {
     private Scope currentScope;
 
-    public void declareVariable(String name, Value value) {
-        currentScope.declare(name, value);
-    }
-
     public Scope currentScope() {
         return currentScope;
     }
@@ -19,19 +15,22 @@ public class RinhaProgram {
         currentScope = currentScope.enclosing();
     }
 
+    public void declare(String name, Value value) {
+        currentScope.declare(name, value);
+    }
+
     public Value resolve(String name) {
-        return Optional.ofNullable(currentScope.resolveVariable(name))
-                .or(() -> Optional.ofNullable(currentScope.resolveFunction(name)))
+        return Optional.ofNullable(currentScope.resolve(name))
                 .orElseThrow(() -> new RuntimeException("Symbol '" + name + "' not declared."));
     }
 
-    public void declareFunction(String name, Function function) {
-        currentScope.declare(name, function);
-    }
-
     public Function loadFunction(String name) {
-        // TODO - Throws exception if function is not declared
-        return currentScope.resolveFunction(name);
+        Value value = resolve(name);
+        if (value instanceof Function function) {
+            return function;
+        } else {
+            throw new RuntimeException("Symbol '" + name + "' is not a function.");
+        }
     }
 
     public void println(Value value) {

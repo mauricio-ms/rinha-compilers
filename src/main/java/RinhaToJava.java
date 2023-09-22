@@ -53,7 +53,7 @@ public class RinhaToJava extends RinhaBaseVisitor<Value> {
 
     @Override
     public Value visitFunctionDeclaration(RinhaParser.FunctionDeclarationContext ctx) {
-        rinhaProgram.declareFunction(
+        rinhaProgram.declare(
                 ctx.ID().getText(),
                 visitFunctionDefinition(ctx.functionDefinition())
         );
@@ -65,7 +65,7 @@ public class RinhaToJava extends RinhaBaseVisitor<Value> {
     @Override
     public Value visitVariableDeclaration(RinhaParser.VariableDeclarationContext ctx) {
         Value value = visitSingleExpression(ctx.singleExpression());
-        rinhaProgram.declareVariable(ctx.ID().getText(), value);
+        rinhaProgram.declare(ctx.ID().getText(), value);
         return value;
     }
 
@@ -102,7 +102,7 @@ public class RinhaToJava extends RinhaBaseVisitor<Value> {
 
         rinhaProgram.setCurrentScope(new FunctionScope(rinhaProgram.currentScope(), functionName));
         for (int i = 0; i < parameters.size(); i++) {
-            rinhaProgram.declareVariable(parameters.get(i), visitSingleExpression(expressions.get(i)));
+            rinhaProgram.declare(parameters.get(i), visitSingleExpression(expressions.get(i)));
         }
 
         Value blockReturn = visitBlock(function.block());

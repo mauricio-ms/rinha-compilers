@@ -1,6 +1,6 @@
 let f = fn(x) => {
-    print("f.x: ")
-    2
+    print(x)
+    x(1)
 }
 
 print(f(fn (x) => { 1 }))
