@@ -75,6 +75,11 @@ public class RinhaToJava extends RinhaBaseVisitor<Value> {
     }
 
     @Override
+    public Value visitAssignment(RinhaParser.AssignmentContext ctx) {
+        throw new RuntimeException("It's not allowed to update symbol values.");
+    }
+
+    @Override
     public Value visitFunctionCall(RinhaParser.FunctionCallContext ctx) {
         String functionName = ctx.ID().getText();
         Function function = rinhaProgram.loadFunction(functionName);

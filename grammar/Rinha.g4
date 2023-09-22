@@ -10,6 +10,7 @@ statement
     : block
     | variableDeclaration
     | functionDeclaration
+    | assignment
     | singleExpression
     ;
 
@@ -26,6 +27,9 @@ functionDeclaration
 
 formalParameterList
     : ID (',' ID)* ;
+
+assignment
+    : ID '=' singleExpression eos ;
 
 eos: ';'? ;
 

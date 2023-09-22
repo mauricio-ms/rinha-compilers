@@ -1,7 +1,2 @@
-let x = 10
-print (x)
-
-let x = x + 4
-print (x)
-
-print(2 == 2)
+let x = "c"
+print (x + "a")
