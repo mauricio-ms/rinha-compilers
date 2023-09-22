@@ -25,18 +25,13 @@ class Str extends Value {
     }
 
     @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-
-        Str str = (Str) o;
-
-        return Objects.equals(v, str.v);
+    Value eq(Str other) {
+        return new Bool(v.equals(other.v()));
     }
 
     @Override
-    public int hashCode() {
-        return v != null ? v.hashCode() : 0;
+    Value neq(Str other) {
+        return new Bool(!v.equals(other.v()));
     }
 
     @Override

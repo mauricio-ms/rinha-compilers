@@ -124,7 +124,6 @@ public class RinhaToJava extends RinhaBaseVisitor<Value> {
         return rinhaProgram.resolve(ctx.getText());
     }
 
-    // TODO - else if can exists?
     @Override
     public Value visitIfStatement(RinhaParser.IfStatementContext ctx) {
         Value ifClause = visitSingleExpression(ctx.singleExpression());

@@ -61,18 +61,13 @@ class Int extends Value {
     }
 
     @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-
-        Int anInt = (Int) o;
-
-        return v == anInt.v;
+    Value eq(Int other) {
+        return new Bool(v == other.v());
     }
 
     @Override
-    public int hashCode() {
-        return v;
+    Value neq(Int other) {
+        return new Bool(v != other.v());
     }
 
     @Override

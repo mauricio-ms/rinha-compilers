@@ -1,4 +1,7 @@
-let sum = fn (n, x) => {
-};
+let x = 10
+print (x)
 
-sum(1, 2, 3)
+let x = x + 4
+print (x)
+
+print(2 == 2)

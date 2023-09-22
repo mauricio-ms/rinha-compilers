@@ -23,6 +23,9 @@
 - test call function with wrong number of args
 - fix print \n
 - add error for parameter with same names
+- check if all Term occurrences in SPECS represents the same think in my grammar
+- After run on docker, test if program is printing to standard output
+- test function composition
 
 # DOUBTS
 - As operações binárias são possíveis para qualquer expressão que retorne valor, como if, print, etc?

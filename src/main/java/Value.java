@@ -157,14 +157,6 @@ public abstract class Value {
                 .formatted(getClass().getSimpleName()));
     }
 
-    public final Value eq(Value other) {
-        return new Bool(this.equals(other));
-    }
-
-    public final Value neq(Value other) {
-        return new Bool(!this.equals(other));
-    }
-
     public final Value lt(Value other) {
         if (other instanceof Int i) {
             return lt(i);
@@ -270,6 +262,60 @@ public abstract class Value {
 
     Value gte(Str other) {
         throw new RuntimeException("Operator '>=' cannot be applied to '%s', 'Str'."
+                .formatted(getClass().getSimpleName()));
+    }
+
+    public final Value eq(Value other) {
+        if (other instanceof Int i) {
+            return eq(i);
+        } else if (other instanceof Bool b) {
+            return eq(b);
+        } else if (other instanceof Str s) {
+            return eq(s);
+        } else {
+            throw new RuntimeException("Undefined handling of operation '==' for type '" + other.getClass().getSimpleName() + "', update this code.");
+        }
+    }
+
+    Value eq(Int other) {
+        throw new RuntimeException("Operator '==' cannot be applied to '%s', 'Int'."
+                .formatted(getClass().getSimpleName()));
+    }
+
+    Value eq(Bool other) {
+        throw new RuntimeException("Operator '==' cannot be applied to '%s', 'Bool'."
+                .formatted(getClass().getSimpleName()));
+    }
+
+    Value eq(Str other) {
+        throw new RuntimeException("Operator '==' cannot be applied to '%s', 'Str'."
+                .formatted(getClass().getSimpleName()));
+    }
+
+    public final Value neq(Value other) {
+        if (other instanceof Int i) {
+            return neq(i);
+        } else if (other instanceof Bool b) {
+            return neq(b);
+        } else if (other instanceof Str s) {
+            return neq(s);
+        } else {
+            throw new RuntimeException("Undefined handling of operation '!=' for type '" + other.getClass().getSimpleName() + "', update this code.");
+        }
+    }
+
+    Value neq(Int other) {
+        throw new RuntimeException("Operator '!=' cannot be applied to '%s', 'Int'."
+                .formatted(getClass().getSimpleName()));
+    }
+
+    Value neq(Bool other) {
+        throw new RuntimeException("Operator '!=' cannot be applied to '%s', 'Bool'."
+                .formatted(getClass().getSimpleName()));
+    }
+
+    Value neq(Str other) {
+        throw new RuntimeException("Operator '!=' cannot be applied to '%s', 'Str'."
                 .formatted(getClass().getSimpleName()));
     }
 
