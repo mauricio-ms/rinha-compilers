@@ -1,7 +1,11 @@
-FROM openjdk:17
+FROM gradle:latest AS BUILD
 
-WORKDIR /
+WORKDIR /app
+COPY . .
+RUN gradle shadowJar
 
-COPY build/libs/rinhacompilers-0.0.1-SNAPSHOT-all.jar /compiler.jar
-
-ENTRYPOINT ["java", "-jar", "compiler.jar"]
+FROM openjdk:latest
+ENV APP_HOME=/app
+WORKDIR $APP_HOME
+COPY --from=BUILD $APP_HOME .
+ENTRYPOINT ["java", "-jar", "/app/build/libs/rinhacompilers-0.0.1-SNAPSHOT-all.jar"]

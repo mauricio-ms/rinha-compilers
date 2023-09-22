@@ -3,7 +3,6 @@
 #+begin_src shell
 
   docker build -t rinha-compilers .
-  docker run rinha-compilers
 
   # To set a volume with examples
    docker run --rm -v $(pwd)/examples:/examples rinha-compilers
@@ -18,6 +17,7 @@
 - check if all Term occurrences in SPECS represents the same think in my grammar
 - test function composition
 - define gradle in docker
+- check identifier rules in official AST generator
 
 # DOUBTS
 - As operações binárias são possíveis para qualquer expressão que retorne valor, como if, print, etc?
