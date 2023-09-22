@@ -2,10 +2,11 @@
 
 #+begin_src shell
 
+  # Build the image
   docker build -t rinha-compilers .
 
-  # To set a volume with examples
-   docker run --rm -v $(pwd)/examples:/examples rinha-compilers
+  # Run passing the volume mapping where the rinha files are stored and passing as argument to the program the file to execute
+  docker run --rm -v $(pwd)/examples:/examples rinha-compilers examples/fib.rinha
  
 #+end_src
 

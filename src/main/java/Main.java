@@ -12,7 +12,7 @@ public class Main {
 	public static void main(String[] args) {
         System.out.println("== START");
 		try {
-            var input = new FileInputStream("examples/test.rinha");
+            var input = new FileInputStream(args[0]);
             var chars = CharStreams.fromStream(input);
             var lexer = new RinhaLexer(chars);
             var tokens = new CommonTokenStream(lexer);
