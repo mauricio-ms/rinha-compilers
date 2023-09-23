@@ -1,4 +1,7 @@
-let _ = 1
-let a123 = 2
-let A_ = 2
-let 1a = 3
+let x = "global"
+
+let foo = fn (x) => {
+    let bar = fn () => { x };
+    bar
+};
+print(foo("hello, world")())

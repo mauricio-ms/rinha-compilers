@@ -22,7 +22,12 @@
 - what is var, different from let?
 - add error for parameter and var with same names
 - check if all Term occurrences in SPECS represents the same think in my grammar
+
+    call->callee
+
 - execute function from expressions
+- let value next?
+- define docker restrictions
 
 # DOUBTS
 - As operações binárias são possíveis para qualquer expressão que retorne valor, como if, print, etc?

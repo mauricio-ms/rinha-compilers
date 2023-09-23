@@ -19,6 +19,7 @@ public class RinhaToJava extends RinhaBaseVisitor<Value> {
     public Value visitTerm(RinhaParser.TermContext ctx) {
         return Optional.ofNullable(ctx.bop)
                 .map(bop -> evaluateBinOp(bop.getText(), ctx.term(0), ctx.term(1)))
+                .or(() -> Optional.ofNullable(evaluateFunction(ctx)))
                 .orElseGet(() -> visitChildren(ctx));
     }
 
@@ -40,6 +41,34 @@ public class RinhaToJava extends RinhaBaseVisitor<Value> {
             case "||" -> leftValue.or(rightValue);
             default -> throw new RuntimeException("Binary Operation '" + bop + "' cannot be parsed.");
         };
+    }
+
+    private Value evaluateFunction(RinhaParser.TermContext ctx) {
+        if (ctx.term().size() != 1 && ctx.termList() == null) {
+            return null;
+        } else if (visitTerm(ctx.term(0)) instanceof Function function) {
+            List<String> parameters = function.parameters();
+            var expressions = Optional.ofNullable(ctx.termList())
+                    .map(RinhaParser.TermListContext::term)
+                    .orElseGet(List::of);
+            if (parameters.size() != expressions.size()) {
+                String prefixMessage = parameters.isEmpty() ? "No parameter expected" :
+                        parameters.size() == 1 ? "Expected 1 parameter" :
+                                "Expected " + parameters.size() + " parameters";
+                throw new RuntimeException(prefixMessage + " for function '" + "<#closure>" + "' but found " + expressions.size() + ".");
+            }
+
+            rinhaProgram.setCurrentScope(new FunctionScope(rinhaProgram.currentScope(), "<#closure>"));
+            for (int i = 0; i < parameters.size(); i++) {
+                rinhaProgram.declare(parameters.get(i), visitTerm(expressions.get(i)));
+            }
+
+            Value blockReturn = visitBlock(function.block());
+            rinhaProgram.deleteCurrentScope();
+            return blockReturn;
+        } else {
+            throw new RuntimeException(ctx.getText() + " is not a function.");
+        }
     }
 
     @Override
@@ -81,32 +110,6 @@ public class RinhaToJava extends RinhaBaseVisitor<Value> {
     @Override
     public Value visitAssignment(RinhaParser.AssignmentContext ctx) {
         throw new RuntimeException("It's not allowed to update symbol values.");
-    }
-
-    @Override
-    public Value visitFunctionCall(RinhaParser.FunctionCallContext ctx) {
-        String functionName = ctx.ID().getText();
-        Function function = rinhaProgram.loadFunction(functionName);
-
-        List<String> parameters = function.parameters();
-        var expressions = Optional.ofNullable(ctx.termList())
-                .map(RinhaParser.TermListContext::term)
-                .orElseGet(List::of);
-        if (parameters.size() != expressions.size()) {
-            String prefixMessage = parameters.isEmpty() ? "No parameter expected" :
-                    parameters.size() == 1 ? "Expected 1 parameter" :
-                            "Expected " + parameters.size() + " parameters";
-            throw new RuntimeException(prefixMessage + " for function '" + ctx.ID().getText() + "' but found " + expressions.size() + ".");
-        }
-
-        rinhaProgram.setCurrentScope(new FunctionScope(rinhaProgram.currentScope(), functionName));
-        for (int i = 0; i < parameters.size(); i++) {
-            rinhaProgram.declare(parameters.get(i), visitTerm(expressions.get(i)));
-        }
-
-        Value blockReturn = visitBlock(function.block());
-        rinhaProgram.deleteCurrentScope();
-        return blockReturn;
     }
 
     @Override

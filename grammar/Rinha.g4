@@ -32,14 +32,14 @@ assignment
 eos: ';'? ;
 
 term
-    : term bop=('*' | '/' | '%') term
+    : term '(' termList? ')'
+    | term bop=('*' | '/' | '%') term
     | term bop=('+' | '-') term
     | term bop=('<=' | '>=' | '<' | '>') term
     | term bop=('==' | '!=') term
     | term bop='&&' term
     | term bop='||' term
     | functionDefinition
-    | functionCall
     | ifStatement
     | print
     | first
@@ -49,14 +49,11 @@ term
     | id
     ;
 
-functionDefinition
-    : 'fn' '(' formalParameterList? ')' '=' '>' block ;
-
-functionCall
-    : ID '(' termList? ')' eos ;
-
 termList
     : term (',' term)* ;
+
+functionDefinition
+    : 'fn' '(' formalParameterList? ')' '=' '>' block ;
 
 tuple
     : '(' term ',' term ')' ;
