@@ -1,13 +1,10 @@
 class FunctionScope extends BaseScope {
-    private final String functionName;
-
-    public FunctionScope(Scope enclosingScope, String functionName) {
+    public FunctionScope(Scope enclosingScope) {
         super(enclosingScope);
-        this.functionName = functionName;
     }
 
     @Override
     public String name() {
-        return "fn " + functionName;
+        return "function";
     }
 }

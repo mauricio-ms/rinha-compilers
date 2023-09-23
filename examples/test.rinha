@@ -4,4 +4,4 @@ let foo = fn (x) => {
     let bar = fn () => { x };
     bar
 };
-print(foo("hello, world")())
+print(print(foo("hello, world"))())

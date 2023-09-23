@@ -6,7 +6,6 @@ import java.util.List;
 import java.util.Optional;
 
 public class RinhaToJava extends RinhaBaseVisitor<Value> {
-
     private final RinhaProgram rinhaProgram = new RinhaProgram();
 
     @Override
@@ -55,10 +54,10 @@ public class RinhaToJava extends RinhaBaseVisitor<Value> {
                 String prefixMessage = parameters.isEmpty() ? "No parameter expected" :
                         parameters.size() == 1 ? "Expected 1 parameter" :
                                 "Expected " + parameters.size() + " parameters";
-                throw new RuntimeException(prefixMessage + " for function '" + "<#closure>" + "' but found " + expressions.size() + ".");
+                throw new RuntimeException(prefixMessage + " for function '" + function.name() + "' but found " + expressions.size() + ".");
             }
 
-            rinhaProgram.setCurrentScope(new FunctionScope(rinhaProgram.currentScope(), "<#closure>"));
+            rinhaProgram.setCurrentScope(function.scope());
             for (int i = 0; i < parameters.size(); i++) {
                 rinhaProgram.declare(parameters.get(i), visitTerm(expressions.get(i)));
             }
@@ -82,9 +81,10 @@ public class RinhaToJava extends RinhaBaseVisitor<Value> {
 
     @Override
     public Value visitFunctionDeclaration(RinhaParser.FunctionDeclarationContext ctx) {
+        String functionName = ctx.ID().getText();
         rinhaProgram.declare(
-                ctx.ID().getText(),
-                visitFunctionDefinition(ctx.functionDefinition())
+                functionName,
+                createFunction(functionName, ctx.functionDefinition())
         );
         return null;
     }
@@ -98,8 +98,14 @@ public class RinhaToJava extends RinhaBaseVisitor<Value> {
     }
 
     @Override
-    public Function visitFunctionDefinition(RinhaParser.FunctionDefinitionContext ctx) {
+    public Value visitFunctionDefinition(RinhaParser.FunctionDefinitionContext ctx) {
+        return createFunction(null, ctx);
+    }
+
+    private Function createFunction(String name, RinhaParser.FunctionDefinitionContext ctx) {
         return new Function(
+                rinhaProgram.currentScope(),
+                name,
                 Optional.ofNullable(ctx.formalParameterList())
                         .map(p -> p.ID().stream().map(ParseTree::getText).toList())
                         .orElseGet(List::of),
