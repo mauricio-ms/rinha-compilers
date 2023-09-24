@@ -18,6 +18,6 @@
 ## Enhancements
 - Remove escape chars in the print output
 - fix print \n
-- what is var, different from let?
 - let value next?
 - define docker restrictions
+- check block as statement

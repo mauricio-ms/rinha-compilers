@@ -67,7 +67,10 @@ literal
 id: ID ;
 
 ifStatement
-    : 'if' '(' term ')' block (ELSE block)? eos ;
+    : 'if' '(' term ')' then 'else' otherwise eos ;
+
+then : '{' term '}' ;
+otherwise : '{' term '}' ;
 
 print
     : 'print' '(' term ')' eos ;
@@ -77,8 +80,6 @@ first
 
 second
     : 'second' '(' term ')' ;
-
-ELSE: 'else' ;
 
 INT: DIGIT+ ;
 BOOL: 'true' | 'false' ;

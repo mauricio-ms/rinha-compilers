@@ -1,7 +1,6 @@
-let x = "global"
-
-let foo = fn (x) => {
-    let bar = fn () => { x };
-    bar
-};
-print(print(foo("hello, world"))())
+if (true) {
+    2
+} else {
+    print(1)
+    3
+}

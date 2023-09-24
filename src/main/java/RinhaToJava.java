@@ -149,13 +149,12 @@ public class RinhaToJava extends RinhaBaseVisitor<Value> {
         Value ifClause = visitTerm(ctx.term());
 
         if (ifClause instanceof Bool ifClauseBool) {
-            int blockStatementsIndex = ifClauseBool.v() ? 0 : ctx.ELSE() != null ? 1 : -1;
-            if (blockStatementsIndex == -1) {
-                throw new RuntimeException("if statement malformed '" + ctx.getText() + "'.");
-            }
 
-            var block = ctx.block(blockStatementsIndex);
-            return visitBlock(block);
+            if (ifClauseBool.v()) {
+                return visitTerm(ctx.then().term());
+            } else {
+                return visitTerm(ctx.otherwise().term());
+            }
         } else {
             throw new RuntimeException("'" + ctx.getText() + " is not a boolean expression");
         }
