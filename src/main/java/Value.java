@@ -1,8 +1,6 @@
 // TODO - Improve memory usage by not recreating types in the bin op's
 public abstract class Value {
 
-    // TODO - Doesn't have parenthesized expressions?
-
     static Value getInt(String v) {
         return new Int(Integer.parseInt(v));
     }
