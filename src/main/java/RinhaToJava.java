@@ -57,7 +57,9 @@ public class RinhaToJava extends RinhaBaseVisitor<Value> {
                 throw new RuntimeException(prefixMessage + " for function '" + function.name() + "' but found " + expressions.size() + ".");
             }
 
-            rinhaProgram.setCurrentScope(function.scope());
+            rinhaProgram.setCurrentScope(new FunctionScope(
+                    function.closureScope(),
+                    rinhaProgram.currentScope()));
             for (int i = 0; i < parameters.size(); i++) {
                 rinhaProgram.declare(parameters.get(i), visitTerm(expressions.get(i)));
             }

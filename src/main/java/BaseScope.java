@@ -33,6 +33,11 @@ abstract class BaseScope implements Scope {
     }
 
     @Override
+    public Value get(String name) {
+        return symbols.get(name);
+    }
+
+    @Override
     public String toString() {
         return name() + ":" + symbols;
     }
