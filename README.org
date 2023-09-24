@@ -10,8 +10,8 @@
   # Build the image
   docker build -t rinha-compilers .
 
-  # Run passing the volume mapping where the rinha files are stored and passing as argument to the program the file to execute
-  docker run --rm -v $(pwd)/examples:/examples rinha-compilers examples/fib.rinha
+  # Run
+  docker run rinha-compilers
  
 #+end_src
 
