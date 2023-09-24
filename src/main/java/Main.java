@@ -10,7 +10,6 @@ import antlr.RinhaParser;
 public class Main {
 	
 	public static void main(String[] args) {
-        System.out.println("== START");
 		try {
             var input = new FileInputStream(args[0]);
             var chars = CharStreams.fromStream(input);
@@ -24,6 +23,5 @@ public class Main {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-        System.out.println("== END");
 	}
 }
