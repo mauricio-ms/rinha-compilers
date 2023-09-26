@@ -1,4 +1,5 @@
 class Int extends Value {
+    public static final Int MINUS_ONE = new Int(-1);
     private final int v;
     Int(int v) {
         this.v = v;

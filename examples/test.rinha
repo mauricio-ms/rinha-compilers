@@ -1,14 +1,4 @@
-let a = fn () => {
-  let b = fn () => {
-    let c = fn () => {
-        print("call")
-    }
-    c()
-  }
-  b()
-}
-
-a()
-a()
-a()
-a()
+let x = -1
+let y = +25
+print(x)
+print(y)

@@ -18,6 +18,8 @@ public class RinhaToJava extends RinhaBaseVisitor<Value> {
     public Value visitTerm(RinhaParser.TermContext ctx) {
         return Optional.ofNullable(ctx.bop)
                 .map(bop -> evaluateBinOp(bop.getText(), ctx.term(0), ctx.term(1)))
+                .or(() -> Optional.ofNullable(ctx.uop)
+                        .map(uop -> evaluateUOp(uop.getText(), ctx.term(0))))
                 .or(() -> Optional.ofNullable(evaluateFunction(ctx)))
                 .orElseGet(() -> visitChildren(ctx));
     }
@@ -39,6 +41,15 @@ public class RinhaToJava extends RinhaBaseVisitor<Value> {
             case "&&" -> leftValue.and(rightValue);
             case "||" -> leftValue.or(rightValue);
             default -> throw new RuntimeException("Binary Operation '" + bop + "' cannot be parsed.");
+        };
+    }
+
+    private Value evaluateUOp(String uop, RinhaParser.TermContext expr) {
+        Value exprValue = visitTerm(expr);
+        return switch (uop) {
+            case "+" -> exprValue;
+            case "-" -> exprValue.mul(Int.MINUS_ONE);
+            default -> throw new RuntimeException("Unary Operation '" + uop + "' cannot be parsed.");
         };
     }
 
