@@ -1,7 +1,14 @@
-let x = "global"
+let a = fn () => {
+  let b = fn () => {
+    let c = fn () => {
+        print("call")
+    }
+    c()
+  }
+  b()
+}
 
-let foo = fn (x) => {
-    let bar = fn () => { x };
-    bar
-};
-print(print(foo("hello, world"))())
+a()
+a()
+a()
+a()

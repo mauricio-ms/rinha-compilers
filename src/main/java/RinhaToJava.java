@@ -60,12 +60,23 @@ public class RinhaToJava extends RinhaBaseVisitor<Value> {
             rinhaProgram.setCurrentScope(new FunctionScope(
                     function.closureScope(),
                     rinhaProgram.currentScope()));
+            List<Value> parameterValues = expressions.stream().map(this::visitTerm).toList();
+            Value cached = rinhaProgram.readFromCache(function, parameterValues);
+            if (cached != null) {
+                rinhaProgram.deleteCurrentScope();
+                return cached;
+            }
             for (int i = 0; i < parameters.size(); i++) {
-                rinhaProgram.declare(parameters.get(i), visitTerm(expressions.get(i)));
+                rinhaProgram.declare(parameters.get(i), parameterValues.get(i));
             }
 
             Value blockReturn = visitBlock(function.block());
+            boolean sideEffect = rinhaProgram.sideEffect();
             rinhaProgram.deleteCurrentScope();
+            if (sideEffect) {
+                rinhaProgram.markSideEffect();
+            }
+            rinhaProgram.cache(function, parameterValues, blockReturn);
             return blockReturn;
         } else {
             throw new RuntimeException(ctx.getText() + " is not a function.");
@@ -106,7 +117,9 @@ public class RinhaToJava extends RinhaBaseVisitor<Value> {
 
     private Function createFunction(String name, RinhaParser.FunctionDefinitionContext ctx) {
         return new Function(
-                rinhaProgram.currentScope(),
+                new FunctionScope(
+                        rinhaProgram.currentScope(),
+                        rinhaProgram.currentScope()),
                 name,
                 Optional.ofNullable(ctx.formalParameterList())
                         .map(p -> p.ID().stream().map(ParseTree::getText).toList())

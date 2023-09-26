@@ -1,3 +1,4 @@
+import java.util.List;
 import java.util.Optional;
 
 public class RinhaProgram {
@@ -24,7 +25,24 @@ public class RinhaProgram {
                 .orElseThrow(() -> new RuntimeException("Symbol '" + name + "' not declared."));
     }
 
+    public void cache(Function function, List<Value> callParameters, Value result) {
+        currentScope.cache(function, callParameters, result);
+    }
+
+    public Value readFromCache(Function function, List<Value> callParameters) {
+        return currentScope.readFromCache(function, callParameters);
+    }
+
     public void println(Value value) {
         System.out.println(value);
+        markSideEffect();
+    }
+
+    public void markSideEffect() {
+        currentScope.markSideEffect();
+    }
+
+    public boolean sideEffect() {
+        return currentScope.sideEffect();
     }
 }

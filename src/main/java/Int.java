@@ -69,6 +69,21 @@ class Int extends Value {
     }
 
     @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Int anInt = (Int) o;
+
+        return v == anInt.v;
+    }
+
+    @Override
+    public int hashCode() {
+        return v;
+    }
+
+    @Override
     public String toString() {
         return String.valueOf(v);
     }
