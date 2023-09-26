@@ -33,6 +33,7 @@ eos: ';'? ;
 
 term
     : term '(' termList? ')'
+    | uop=('+' | '-') term
     | term bop=('*' | '/' | '%') term
     | term bop=('+' | '-') term
     | term bop=('<=' | '>=' | '<' | '>') term
