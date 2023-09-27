@@ -15,6 +15,26 @@
  
 #+end_src
 
+* AST example for Fibonacci program
+
+#+begin_src cpp
+
+  let fib = fn (n) => {
+    if (n < 2) {
+      n
+    } else {
+      fib(n - 1) + fib(n - 2)
+    }
+  };
+
+  print(fib(46))
+  
+#+end_src
+
+#+ATTR_HTML: :width 1000
+[[./img/fib-ast.png]]
+
+
 ## Enhancements
 - Remove escape chars in the print output
 - define anonymous function, i.e, without let

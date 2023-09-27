@@ -1,9 +1,5 @@
 grammar Rinha;
 
-@header {
-  package antlr;
-}
-
 compilationUnit: statement* ;
 
 statement
