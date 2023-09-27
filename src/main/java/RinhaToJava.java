@@ -16,11 +16,13 @@ public class RinhaToJava extends RinhaBaseVisitor<Value> {
 
     @Override
     public Value visitTerm(RinhaParser.TermContext ctx) {
-        return Optional.ofNullable(ctx.bop)
-                .map(bop -> evaluateBinOp(bop.getText(), ctx.term(0), ctx.term(1)))
+        return Optional.ofNullable(evaluateFunction(ctx))
                 .or(() -> Optional.ofNullable(ctx.uop)
                         .map(uop -> evaluateUOp(uop.getText(), ctx.term(0))))
-                .or(() -> Optional.ofNullable(evaluateFunction(ctx)))
+                .or(() -> Optional.ofNullable(ctx.bop)
+                        .map(bop -> evaluateBinOp(bop.getText(), ctx.term(0), ctx.term(1))))
+                .or(() -> Optional.ofNullable(ctx.term(0))
+                        .map(this::visitTerm))
                 .orElseGet(() -> visitChildren(ctx));
     }
 
@@ -54,7 +56,7 @@ public class RinhaToJava extends RinhaBaseVisitor<Value> {
     }
 
     private Value evaluateFunction(RinhaParser.TermContext ctx) {
-        if (ctx.term().size() != 1 && ctx.termList() == null) {
+        if (ctx.termList() == null) {
             return null;
         } else if (visitTerm(ctx.term(0)) instanceof Function function) {
             List<String> parameters = function.parameters();

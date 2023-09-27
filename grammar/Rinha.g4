@@ -48,6 +48,7 @@ term
     | tuple
     | literal
     | id
+    | '(' term ')'
     ;
 
 termList
