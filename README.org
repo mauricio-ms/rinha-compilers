@@ -10,10 +10,30 @@
   # Build the image
   docker build -t rinha-compilers .
 
-  # Run passing the volume mapping where the rinha files are stored and passing as argument to the program the file to execute
-  docker run --rm -v $(pwd)/examples:/examples rinha-compilers examples/fib.rinha
+  # Run
+  docker run rinha-compilers
  
 #+end_src
+
+* AST example for Fibonacci program
+
+#+begin_src cpp
+
+  let fib = fn (n) => {
+    if (n < 2) {
+      n
+    } else {
+      fib(n - 1) + fib(n - 2)
+    }
+  };
+
+  print(fib(46))
+  
+#+end_src
+
+#+ATTR_HTML: :width 1000
+[[./img/fib-ast.png]]
+
 
 ## Enhancements
 - Remove escape chars in the print output

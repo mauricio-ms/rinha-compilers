@@ -11,7 +11,7 @@ public class Main {
 	
 	public static void main(String[] args) {
 		try {
-            var input = new FileInputStream(args[0]);
+            var input = new FileInputStream("/var/rinha/source.rinha");
             var chars = CharStreams.fromStream(input);
             var lexer = new RinhaLexer(chars);
             var tokens = new CommonTokenStream(lexer);

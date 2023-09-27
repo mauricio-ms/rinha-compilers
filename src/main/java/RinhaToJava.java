@@ -16,9 +16,13 @@ public class RinhaToJava extends RinhaBaseVisitor<Value> {
 
     @Override
     public Value visitTerm(RinhaParser.TermContext ctx) {
-        return Optional.ofNullable(ctx.bop)
-                .map(bop -> evaluateBinOp(bop.getText(), ctx.term(0), ctx.term(1)))
-                .or(() -> Optional.ofNullable(evaluateFunction(ctx)))
+        return Optional.ofNullable(evaluateFunction(ctx))
+                .or(() -> Optional.ofNullable(ctx.uop)
+                        .map(uop -> evaluateUOp(uop.getText(), ctx.term(0))))
+                .or(() -> Optional.ofNullable(ctx.bop)
+                        .map(bop -> evaluateBinOp(bop.getText(), ctx.term(0), ctx.term(1))))
+                .or(() -> Optional.ofNullable(ctx.term(0))
+                        .map(this::visitTerm))
                 .orElseGet(() -> visitChildren(ctx));
     }
 
@@ -42,8 +46,17 @@ public class RinhaToJava extends RinhaBaseVisitor<Value> {
         };
     }
 
+    private Value evaluateUOp(String uop, RinhaParser.TermContext expr) {
+        Value exprValue = visitTerm(expr);
+        return switch (uop) {
+            case "+" -> exprValue;
+            case "-" -> exprValue.mul(Int.MINUS_ONE);
+            default -> throw new RuntimeException("Unary Operation '" + uop + "' cannot be parsed.");
+        };
+    }
+
     private Value evaluateFunction(RinhaParser.TermContext ctx) {
-        if (ctx.term().size() != 1 && ctx.termList() == null) {
+        if (ctx.termList() == null) {
             return null;
         } else if (visitTerm(ctx.term(0)) instanceof Function function) {
             List<String> parameters = function.parameters();
@@ -60,12 +73,23 @@ public class RinhaToJava extends RinhaBaseVisitor<Value> {
             rinhaProgram.setCurrentScope(new FunctionScope(
                     function.closureScope(),
                     rinhaProgram.currentScope()));
+            List<Value> parameterValues = expressions.stream().map(this::visitTerm).toList();
+            Value cached = rinhaProgram.readFromCache(function, parameterValues);
+            if (cached != null) {
+                rinhaProgram.deleteCurrentScope();
+                return cached;
+            }
             for (int i = 0; i < parameters.size(); i++) {
-                rinhaProgram.declare(parameters.get(i), visitTerm(expressions.get(i)));
+                rinhaProgram.declare(parameters.get(i), parameterValues.get(i));
             }
 
             Value blockReturn = visitBlock(function.block());
+            boolean sideEffect = rinhaProgram.sideEffect();
             rinhaProgram.deleteCurrentScope();
+            if (sideEffect) {
+                rinhaProgram.markSideEffect();
+            }
+            rinhaProgram.cache(function, parameterValues, blockReturn);
             return blockReturn;
         } else {
             throw new RuntimeException(ctx.getText() + " is not a function.");
@@ -106,7 +130,9 @@ public class RinhaToJava extends RinhaBaseVisitor<Value> {
 
     private Function createFunction(String name, RinhaParser.FunctionDefinitionContext ctx) {
         return new Function(
-                rinhaProgram.currentScope(),
+                new FunctionScope(
+                        rinhaProgram.currentScope(),
+                        rinhaProgram.currentScope()),
                 name,
                 Optional.ofNullable(ctx.formalParameterList())
                         .map(p -> p.ID().stream().map(ParseTree::getText).toList())

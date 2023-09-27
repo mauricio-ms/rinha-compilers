@@ -1,21 +1,13 @@
 grammar Rinha;
 
-@header {
-  package antlr;
-}
-
 compilationUnit: statement* ;
 
 statement
-    : block
-    | functionDeclaration
+    : functionDeclaration
     | variableDeclaration
     | assignment
     | term
     ;
-
-block
-    : '{' statement* '}' eos ;
 
 functionDeclaration
     : 'let' ID '=' functionDefinition eos ;
@@ -33,6 +25,7 @@ eos: ';'? ;
 
 term
     : term '(' termList? ')'
+    | uop=('+' | '-') term
     | term bop=('*' | '/' | '%') term
     | term bop=('+' | '-') term
     | term bop=('<=' | '>=' | '<' | '>') term
@@ -47,6 +40,7 @@ term
     | tuple
     | literal
     | id
+    | '(' term ')'
     ;
 
 termList
@@ -54,6 +48,9 @@ termList
 
 functionDefinition
     : 'fn' '(' formalParameterList? ')' '=' '>' block ;
+
+block
+    : '{' statement* '}' eos ;
 
 tuple
     : '(' term ',' term ')' ;

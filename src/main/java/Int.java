@@ -1,4 +1,5 @@
 class Int extends Value {
+    public static final Int MINUS_ONE = new Int(-1);
     private final int v;
     Int(int v) {
         this.v = v;
@@ -66,6 +67,21 @@ class Int extends Value {
     @Override
     Value neq(Int other) {
         return new Bool(v != other.v());
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Int anInt = (Int) o;
+
+        return v == anInt.v;
+    }
+
+    @Override
+    public int hashCode() {
+        return v;
     }
 
     @Override
