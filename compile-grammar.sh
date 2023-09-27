@@ -1,4 +1,4 @@
 #!/usr/bin/bash
 rm -f src/main/java/antlr/*
 cd grammar
-java -Xmx500M -cp "/tools/antlr-4.13.1-complete.jar:$CLASSPATH" org.antlr.v4.Tool -visitor -o ../src/main/java -package antlr Rinha.g4
+java -Xmx500M -cp "/tools/antlr-4.13.1-complete.jar:$CLASSPATH" org.antlr.v4.Tool -visitor -o ../src/main/java/antlr -package antlr Rinha.g4
