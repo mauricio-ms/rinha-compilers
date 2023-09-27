@@ -7,15 +7,11 @@ grammar Rinha;
 compilationUnit: statement* ;
 
 statement
-    : block
-    | functionDeclaration
+    : functionDeclaration
     | variableDeclaration
     | assignment
     | term
     ;
-
-block
-    : '{' statement* '}' eos ;
 
 functionDeclaration
     : 'let' ID '=' functionDefinition eos ;
@@ -56,6 +52,9 @@ termList
 
 functionDefinition
     : 'fn' '(' formalParameterList? ')' '=' '>' block ;
+
+block
+    : '{' statement* '}' eos ;
 
 tuple
     : '(' term ',' term ')' ;
