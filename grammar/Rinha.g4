@@ -2,9 +2,6 @@ grammar Rinha;
 
 compilationUnit: (term eos)* ;
 
-formalParameterList
-    : ID (',' ID)* ;
-
 eos
     : ';'
     | '\r'? '\n'
@@ -22,7 +19,7 @@ term
     | term bop='||' term
     | let
     | functionDefinition
-    | ifStatement
+    | if
     | print
     | first
     | second
@@ -39,24 +36,12 @@ let : 'let' ID '=' term eos term ;
 
 functionDefinition
     : 'fn' '(' formalParameterList? ')' '=' '>' block ;
-
+formalParameterList
+    : ID (',' ID)* ;
 block
     : '{' (term eos)* '}' ;
 
-tuple
-    : '(' term ',' term ')' ;
-
-literal
-    : INT
-    | BOOL
-    | STRING
-    ;
-
-id: ID ;
-
-ifStatement
-    : 'if' '(' term ')' then 'else' otherwise ;
-
+if : 'if' '(' term ')' then 'else' otherwise ;
 then : '{' term '}' ;
 otherwise : '{' term '}' ;
 
@@ -68,6 +53,17 @@ first
 
 second
     : 'second' '(' term ')' ;
+
+tuple
+    : '(' term ',' term ')' ;
+
+literal
+    : INT
+    | BOOL
+    | STRING
+    ;
+
+id: ID ;
 
 INT: DIGIT+ ;
 BOOL: 'true' | 'false' ;

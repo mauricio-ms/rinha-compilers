@@ -153,7 +153,7 @@ public class RinhaToJava extends RinhaBaseVisitor<Value> {
     }
 
     @Override
-    public Value visitIfStatement(RinhaParser.IfStatementContext ctx) {
+    public Value visitIf(RinhaParser.IfContext ctx) {
         Value ifClause = visitTerm(ctx.term());
 
         if (ifClause instanceof Bool ifClauseBool) {

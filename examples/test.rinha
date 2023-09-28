@@ -1,5 +1,1 @@
-let a = 2; print(a)
-print(a)
-let x = 2
-2
-let v = 1
+let a = 2; print(a) ; print(a)

@@ -39,9 +39,6 @@
 - Remove escape chars in the print output
 - fix print \n
 - rename RinhaToJava to RinhaInterpreter
-- testar múltiplas expressões em uma linha
-    - separadas por ; devem funcionar
-    - sem ; devem dar erro
 - use labels in expressions with multiples derivations like term and try to remove the op and binop token labels
 - use -no-listener option in scripts to not generate listeners
 - analyze to use ParseTreeProperty<T>
