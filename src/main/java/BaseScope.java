@@ -50,7 +50,7 @@ abstract class BaseScope implements Scope {
 
     @Override
     public void cache(Function function, List<Value> callParameters, Value result) {
-        if (hasFunction(function)) {
+        if (!isFunctionDeclared(function) && enclosingScope != null) {
             enclosingScope.cache(function, callParameters, result);
         } else if (!sideEffect) {
             cache.computeIfAbsent(function, f -> new HashMap<>());
@@ -60,18 +60,20 @@ abstract class BaseScope implements Scope {
 
     @Override
     public Value readFromCache(Function function, List<Value> callParameters) {
-        if (hasFunction(function)) {
-            return enclosingScope.readFromCache(function, callParameters);
-        } else {
+        if (isFunctionDeclared(function)) {
             if (cache.containsKey(function)) {
                 return cache.get(function).get(callParameters);
             }
             return null;
+        } else if (enclosingScope != null) {
+            return enclosingScope.readFromCache(function, callParameters);
+        } else {
+            return null;
         }
     }
 
-    private boolean hasFunction(Function function) {
-        return symbols.values().stream().filter(v -> v == function).findAny().isEmpty();
+    private boolean isFunctionDeclared(Function function) {
+        return symbols.values().stream().anyMatch(v -> v == function);
     }
 
     @Override

@@ -44,3 +44,6 @@
 - analyze to use ParseTreeProperty<T>
 - define reserved words
 - regenerate fibAST
+- testar tupla dentro de tupla
+- testar passar função com argumento
+- fn() => "" é válido
