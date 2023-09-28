@@ -40,4 +40,15 @@
 - fix print \n
 - let value next?
 - define docker restrictions
-- check block as statement
+- rename RinhaToJava to RinhaInterpreter
+- isso deve funcionar no if:
+let x = 2;
+let y = 3;
+y
+- testar múltiplas expressões em uma linha
+    - separadas por ; devem funcionar
+    - sem ; devem dar erro
+- use labels in expressions with multiples derivations like term and try to remove the op and binop token labels
+- use -no-listener option in scripts to not generate listeners
+- analyze to use ParseTreeProperty<T>
+- define reserved words

@@ -67,7 +67,7 @@ public class RinhaToJava extends RinhaBaseVisitor<Value> {
                 String prefixMessage = parameters.isEmpty() ? "No parameter expected" :
                         parameters.size() == 1 ? "Expected 1 parameter" :
                                 "Expected " + parameters.size() + " parameters";
-                throw new RuntimeException(prefixMessage + " for function '" + function.name() + "' but found " + expressions.size() + ".");
+                throw new RuntimeException(prefixMessage + " for function '" + ctx.term(0).getText() + "' but found " + expressions.size() + ".");
             }
 
             rinhaProgram.setCurrentScope(new FunctionScope(
@@ -106,34 +106,21 @@ public class RinhaToJava extends RinhaBaseVisitor<Value> {
     }
 
     @Override
-    public Value visitFunctionDeclaration(RinhaParser.FunctionDeclarationContext ctx) {
-        String functionName = ctx.ID().getText();
-        rinhaProgram.declare(
-                functionName,
-                createFunction(functionName, ctx.functionDefinition())
-        );
-        return null;
-    }
-
-    // TODO - Reserved words?
-    @Override
-    public Value visitVariableDeclaration(RinhaParser.VariableDeclarationContext ctx) {
-        Value value = visitTerm(ctx.term());
-        rinhaProgram.declare(ctx.ID().getText(), value);
-        return value;
+    public Value visitLet(RinhaParser.LetContext ctx) {
+        String name = ctx.ID().getText();
+        Value value = visitTerm(ctx.term(0));
+        rinhaProgram.declare(name, value);
+        return Optional.ofNullable(ctx.term(1))
+                .map(this::visitTerm)
+                .orElse(value);
     }
 
     @Override
     public Value visitFunctionDefinition(RinhaParser.FunctionDefinitionContext ctx) {
-        return createFunction(null, ctx);
-    }
-
-    private Function createFunction(String name, RinhaParser.FunctionDefinitionContext ctx) {
         return new Function(
                 new FunctionScope(
                         rinhaProgram.currentScope(),
                         rinhaProgram.currentScope()),
-                name,
                 Optional.ofNullable(ctx.formalParameterList())
                         .map(p -> p.ID().stream().map(ParseTree::getText).toList())
                         .orElseGet(List::of),

@@ -3,17 +3,9 @@ grammar Rinha;
 compilationUnit: statement* ;
 
 statement
-    : functionDeclaration
-    | variableDeclaration
-    | assignment
+    : assignment
     | term
     ;
-
-functionDeclaration
-    : 'let' ID '=' functionDefinition eos ;
-
-variableDeclaration
-    : 'let' ID '=' term eos ;
 
 formalParameterList
     : ID (',' ID)* ;
@@ -32,6 +24,7 @@ term
     | term bop=('==' | '!=') term
     | term bop='&&' term
     | term bop='||' term
+    | let
     | functionDefinition
     | ifStatement
     | print
@@ -45,6 +38,8 @@ term
 
 termList
     : term (',' term)* ;
+
+let : 'let' ID '=' term eos term ;
 
 functionDefinition
     : 'fn' '(' formalParameterList? ')' '=' '>' block ;
