@@ -44,4 +44,3 @@
 - analyze to use ParseTreeProperty<T>
 - define reserved words
 - regenerate fibAST
-- fix ackermann program

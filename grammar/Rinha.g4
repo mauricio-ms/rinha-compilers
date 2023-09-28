@@ -9,7 +9,7 @@ eos
     ;
 
 term
-    : term '(' termList? ')'
+    : term '(' termList ')'
     | uop=('+' | '-') term
     | term bop=('*' | '/' | '%') term
     | term bop=('+' | '-') term
@@ -30,7 +30,10 @@ term
     ;
 
 termList
-    : term (',' term)* ;
+    : termListOp? ;
+termListOp
+    : term (',' term)*
+    ;
 
 let : 'let' ID '=' term eos term ;
 

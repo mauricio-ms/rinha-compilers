@@ -60,8 +60,8 @@ public class RinhaToJava extends RinhaBaseVisitor<Value> {
             return null;
         } else if (visitTerm(ctx.term(0)) instanceof Function function) {
             List<String> parameters = function.parameters();
-            var expressions = Optional.ofNullable(ctx.termList())
-                    .map(RinhaParser.TermListContext::term)
+            var expressions = Optional.ofNullable(ctx.termList().termListOp())
+                    .map(RinhaParser.TermListOpContext::term)
                     .orElseGet(List::of);
             if (parameters.size() != expressions.size()) {
                 String prefixMessage = parameters.isEmpty() ? "No parameter expected" :
