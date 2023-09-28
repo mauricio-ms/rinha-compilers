@@ -38,13 +38,7 @@
 ## Enhancements
 - Remove escape chars in the print output
 - fix print \n
-- let value next?
-- define docker restrictions
 - rename RinhaToJava to RinhaInterpreter
-- isso deve funcionar no if:
-let x = 2;
-let y = 3;
-y
 - testar múltiplas expressões em uma linha
     - separadas por ; devem funcionar
     - sem ; devem dar erro
@@ -52,3 +46,5 @@ y
 - use -no-listener option in scripts to not generate listeners
 - analyze to use ParseTreeProperty<T>
 - define reserved words
+- remove statement and assignment, maintain only term
+- regenerate fibAST

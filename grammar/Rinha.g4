@@ -1,19 +1,15 @@
 grammar Rinha;
 
-compilationUnit: statement* ;
-
-statement
-    : assignment
-    | term
-    ;
+compilationUnit: (term eos)* ;
 
 formalParameterList
     : ID (',' ID)* ;
 
-assignment
-    : ID '=' term eos ;
-
-eos: ';'? ;
+eos
+    : ';'
+    | '\r'? '\n'
+    | EOF
+    ;
 
 term
     : term '(' termList? ')'
@@ -45,7 +41,7 @@ functionDefinition
     : 'fn' '(' formalParameterList? ')' '=' '>' block ;
 
 block
-    : '{' statement* '}' eos ;
+    : '{' (term eos)* '}' ;
 
 tuple
     : '(' term ',' term ')' ;
@@ -59,13 +55,13 @@ literal
 id: ID ;
 
 ifStatement
-    : 'if' '(' term ')' then 'else' otherwise eos ;
+    : 'if' '(' term ')' then 'else' otherwise ;
 
 then : '{' term '}' ;
 otherwise : '{' term '}' ;
 
 print
-    : 'print' '(' term ')' eos ;
+    : 'print' '(' term ')' ;
 
 first
     : 'first' '(' term ')' ;

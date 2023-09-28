@@ -99,8 +99,8 @@ public class RinhaToJava extends RinhaBaseVisitor<Value> {
     @Override
     public Value visitBlock(RinhaParser.BlockContext ctx) {
         Value value = null;
-        for (var statement : ctx.statement()) {
-            value = visitStatement(statement);
+        for (var term : ctx.term()) {
+            value = visitTerm(term);
         }
         return value;
     }
@@ -126,11 +126,6 @@ public class RinhaToJava extends RinhaBaseVisitor<Value> {
                         .orElseGet(List::of),
                 ctx.block()
         );
-    }
-
-    @Override
-    public Value visitAssignment(RinhaParser.AssignmentContext ctx) {
-        throw new RuntimeException("It's not allowed to update symbol values.");
     }
 
     @Override
