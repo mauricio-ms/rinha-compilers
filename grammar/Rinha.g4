@@ -3,8 +3,8 @@ grammar Rinha;
 compilationUnit: (term eos)* ;
 
 eos
-    : ';' ('\r'? '\n')?
-    | '\r'? '\n'
+    : ';' ('\r'? '\n')*
+    | ('\r'? '\n')*
     | EOF
     ;
 
