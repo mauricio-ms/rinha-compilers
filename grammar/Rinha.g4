@@ -36,7 +36,9 @@ functionDefinition
 formalParameterList
     : ID (',' ID)* ;
 block
-    : '{' term* '}' ;
+    : '{' term* '}'
+    | term
+    ;
 
 if : 'if' '(' term ')' then 'else' otherwise ;
 then : '{' term '}' ;

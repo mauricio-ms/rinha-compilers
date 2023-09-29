@@ -1,7 +1,7 @@
-let a = 1
+let a = fn(f) => {
+    f()
+}
 
+let b = fn () => "hello"
 
-;
-
-
-print(a)
+print(a(b))
