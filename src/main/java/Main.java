@@ -18,7 +18,7 @@ public class Main {
             var parser = new RinhaParser(tokens);
             parser.setBuildParseTree(true);
             var tree = parser.compilationUnit().getRuleContext();
-            var visitor = new RinhaToJava();
+            var visitor = new RinhaInterpreter();
             visitor.visit(tree);
         } catch (IOException e) {
             throw new RuntimeException(e);

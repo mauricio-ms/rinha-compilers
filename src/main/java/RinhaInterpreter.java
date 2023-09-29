@@ -5,7 +5,7 @@ import org.antlr.v4.runtime.tree.ParseTree;
 import java.util.List;
 import java.util.Optional;
 
-public class RinhaToJava extends RinhaBaseVisitor<Value> {
+public class RinhaInterpreter extends RinhaBaseVisitor<Value> {
     private final RinhaProgram rinhaProgram = new RinhaProgram();
 
     @Override
