@@ -43,5 +43,3 @@
 - use -no-listener option in scripts to not generate listeners
 - analyze to use ParseTreeProperty<T>
 - define reserved words
-- regenerate fibAST
-- fn() => "" é válido?
