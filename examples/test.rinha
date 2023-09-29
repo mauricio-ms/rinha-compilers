@@ -1,18 +1,11 @@
-let m = 1
-let n = 2
-let x = if (m == 0) {
-    n + 1
-  } else {
-    if (n == 2) {
-      400
-    } else {
-      200
-    }
-  };
+let a = if (false) {
+    let x = 2;
+    let y = 3;
+    y;
 
 
+} else {
+    4;
 
-
-
-
-print(x)
+}; print(a) ; print(a)
+print(a)

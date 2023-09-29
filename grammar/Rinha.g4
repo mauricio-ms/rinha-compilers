@@ -1,10 +1,10 @@
 grammar Rinha;
 
-compilationUnit: (term eos)* ;
+compilationUnit: (term eos | NL)* ;
 
 eos
-    : ';' ('\r'? '\n')*
-    | ('\r'? '\n')*
+    : ';'
+    | NL
     | EOF
     ;
 
@@ -35,7 +35,7 @@ termListOp
     : term (',' term)*
     ;
 
-let : 'let' ID '=' term eos term ;
+let : 'let' ID '=' term eos NL* term ;
 
 functionDefinition
     : 'fn' '(' formalParameterList? ')' '=' '>' block ;
@@ -45,8 +45,8 @@ block
     : '{' (term eos)* '}' ;
 
 if : 'if' '(' term ')' then 'else' otherwise ;
-then : '{' term '}' ;
-otherwise : '{' term '}' ;
+then : '{' term eos? '}' ;
+otherwise : '{' term eos? '}' ;
 
 print
     : 'print' '(' term ')' ;
@@ -79,6 +79,8 @@ fragment
     LETTER: 'a'..'z' | 'A'..'Z' ;
 fragment
     DIGIT: '0'..'9' ;
+
+NL : '\r'? '\n' ;
 
 STRING: '"' (ESC | ~["\\])* '"' ;
 fragment ESC : '\\' ["\\/bfnrt] ;
