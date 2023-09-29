@@ -1,11 +1,7 @@
-let a = if (false) {
-    let x = 2;
-    let y = 3;
-    y;
+let a = 1
 
 
-} else {
-    4;
+;
 
-}; print(a) ; print(a)
+
 print(a)
